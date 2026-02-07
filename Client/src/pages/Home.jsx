@@ -83,8 +83,7 @@ const Home = () => {
               </h1>
               
               <p className="text-xl text-gray-600 mb-10 max-w-xl leading-relaxed font-semibold">
-                ArenaFitCheck combines cutting-edge AI with sports science to deliver 
-                professional-grade performance analytics for modern coaching.
+                “ArenaFitCheck combines advanced technology and sports science to deliver professional-grade performance analytics for modern coaching.”
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4">
@@ -93,7 +92,7 @@ const Home = () => {
                   className="group inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold rounded-xl hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
                 >
                   <Play className="w-5 h-5 mr-3" />
-                  Start Free Analysis
+                  Start Your Journy
                   <ChevronRight className="ml-3 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </button>
                 

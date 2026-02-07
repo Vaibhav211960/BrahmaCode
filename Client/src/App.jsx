@@ -13,6 +13,9 @@ import CoachDashboard from './pages/CoachDashboard';
 import AthleteDashboard from './pages/AthleteDashboard'
 import YoloTestForm from './pages/YoloTestForm'
 import RunningMockTest from './pages/RunningMockTest'
+import LongJumpMockTest from './pages/LongJumpMockTest'
+import JavelinMockTest from './pages/JavelinMockTest'
+import RelayMockTest from './pages/RelayMockTest'
 
 function App() {
 
@@ -36,6 +39,9 @@ function App() {
         <Route path='/athlete-dashboard' element={<AthleteDashboard />} />
         <Route path='/YoloTestForm' element={<YoloTestForm/>}/>
         <Route path='/RunningMockTest' element={<RunningMockTest/>}/>
+        <Route path='/LongJumpMockTest' element={<LongJumpMockTest/>}/>
+        <Route path='/JavelinMockTest' element={<JavelinMockTest/>}/>
+        <Route path='/RelayMockTest' element={<RelayMockTest/>}/>
       </Routes>
     </>
   )
