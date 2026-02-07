@@ -3,14 +3,14 @@ const router = express.Router();
 
 import {
   createRelayTest,
-  getRelayInjuryRisk,
+  // getRelayInjuryRisk,
   getRelayScore,
   getRelayWeakness,
-} from "../controllers/relay.controller";
+} from "../controllers/relay.controller.js";
 
-router.post("/relay/create", createRelayTest);
+router.post("/create", createRelayTest);
 router.get("/relay/weakness/:athleteId", getRelayWeakness);
-router.get("/relay/injury-risk/:athleteId", getRelayInjuryRisk);
+// router.get("/relay/injury-risk/:athleteId", getRelayInjuryRisk);
 router.get("/get/:athleteId", getRelayScore);
 
 

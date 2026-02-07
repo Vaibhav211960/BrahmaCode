@@ -1,24 +1,5 @@
 import mongoose from "mongoose";
 
-const longJumpMetricSchema = new mongoose.Schema(
-  {
-    value: {
-      type: mongoose.Schema.Types.Mixed,
-      required: true,
-    },
-    status: {
-      type: String,
-      enum: ["Correct", "Incorrect"],
-      required: true,
-    },
-    note: {
-      type: String,
-      default: "",
-    },
-  },
-  { _id: false }
-);
-
 const longJumpTestSchema = new mongoose.Schema(
   {
     athleteId: {
@@ -26,25 +7,23 @@ const longJumpTestSchema = new mongoose.Schema(
       ref: "Athlete",
       required: true,
     },
+    // Matches Frontend Technique Checks exactly
+    takeOffFoot: { type: String, required: true }, // "Correct" or "Incorrect"
+    speedBeforeBoard: { type: String, required: true },
+    kneeAtLanding: { type: String, required: true },
+    balanceAfterLanding: { type: String, required: true },
+    
+    // Fouls handled as a number
+    repeatedFouls: { type: Number, default: 0 },
 
-    takeOffFoot: longJumpMetricSchema,      
-    speedBeforeBoard: longJumpMetricSchema,
-    kneeAtLanding: longJumpMetricSchema,     
-    balanceAfterLanding: longJumpMetricSchema, 
-
-    repeatedFouls: {
-      value: {
-        type: Number,
-        required: true,
-      },
-      status: {
-        type: String,
-        enum: ["Correct", "Incorrect"],
-        required: true,
-      },
-    },
+    // Calculated fields for Dashboard speed
+    totalScore: { type: Number, default: 0 },
+    riskLevel: { type: String, enum: ["Low", "Medium", "High"], default: "Low" },
+    grade: { type: String, enum: ["Excellent", "Good", "Average", "Poor"], default: "Average" },
+    
   },
   { timestamps: true }
 );
 
-export default mongoose.model("LongJump", longJumpTestSchema);
+const LongJump = mongoose.model("LongJump", longJumpTestSchema);
+export default LongJump;

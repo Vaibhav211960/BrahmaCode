@@ -4,14 +4,14 @@ const router = express.Router()
 
 import {
     createLongJumpTest,
-    getLongJumpInjuryRisk,
+    // getLongJumpInjuryRisk,
     getLongJumpScore,
     getLongJumpWeakness
-} from "../controllers/longJump.controller"
+} from "../controllers/longJump.controller.js"
 
-router.post("/longjump/create", createLongJumpTest);
+router.post("/create", createLongJumpTest);
 router.get("/longjump/weakness/:athleteId", getLongJumpWeakness);
-router.get("/longjump/injury-risk/:athleteId", getLongJumpInjuryRisk);
+// router.get("/longjump/injury-risk/:athleteId", getLongJumpInjuryRisk);
 router.get("/get/:athleteId", getLongJumpScore);
 
 export default router;
