@@ -12,6 +12,9 @@
   "dependencies": {
     "@tailwindcss/postcss": "^4.1.18",
     "@tailwindcss/vite": "^4.1.18",
+    "axios": "^1.13.4",
+    "axois": "^0.0.1-security",
+    "cors": "^2.8.6",
     "lucide-react": "^0.563.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",

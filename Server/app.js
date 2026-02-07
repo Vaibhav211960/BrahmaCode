@@ -44,7 +44,7 @@ app.use(passport.session())
 import AthleteRoutes from "./routes/athlete.routes.js"
 import CoachRoutes from "./routes/coach.routes.js"
 
-app.use("/athletes", AthleteRoutes)
-app.use("/coaches", CoachRoutes)
+app.use("/api/athlete", AthleteRoutes)
+app.use("/api/coaches", CoachRoutes)
 
 export default app;

@@ -1,27 +1,31 @@
 import mongoose from "mongoose";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 const athleteModel = new mongoose.Schema(
   {
     name: {
-      type: "String",
-      required: true,
+      type: String
     },
     email: {
-      type: "String",
-      requried: true,
+      type: String,
+      required: true,
+    },
+    role: {
+      type: String,
+      default: "athlete",
     },
     password: {
-      type: "String",
+      type: String,
       required: true,
     },
     bio: {
-      type: "String",
+      type: String,
       default: "",
     },
-    sportType: {
-      type: "String",
+    sport: {
+      type: String,
       required: true,
-      enum: [""],
     },
     history: {
       type: mongoose.Schema.Types.ObjectId,
