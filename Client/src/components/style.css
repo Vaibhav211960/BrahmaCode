@@ -11,7 +11,7 @@ nav {
   justify-content: space-between;
   align-items: center;
   padding: 1rem 5%;
-  background-color: rgba(0, 0, 0, 0.85);
+  background-color: rgb(0, 0, 0);
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -40,7 +40,7 @@ nav {
 
 .links a {
   text-decoration: none;
-  color: var(--text-muted);
+  color: white;
   font-weight: 500;
   font-size: 0.95rem;
   transition: all 0.2s ease;

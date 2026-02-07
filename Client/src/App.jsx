@@ -12,6 +12,7 @@ import ResetPassword from "./pages/ResetPassword"
 import CoachDashboard from './pages/CoachDashboard';
 import AthleteDashboard from './pages/AthleteDashboard'
 import YoloTestForm from './pages/YoloTestForm'
+import RunningMockTest from './pages/RunningMockTest'
 
 function App() {
 
@@ -36,6 +37,7 @@ function App() {
 
         <Route path='/athlete-dashboard' element={<AthleteDashboard />} />
         <Route path='/YoloTestForm' element={<YoloTestForm/>}/>
+        <Route path='/RunningMockTest' element={<RunningMockTest/>}/>
       </Routes>
     </>
   )

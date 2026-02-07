@@ -77,7 +77,7 @@ const Home = () => {
               
               <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
                 Elevate Athletic
-                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">
+                <span className="block leading-14 text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">
                   Performance
                 </span>
               </h1>
@@ -97,22 +97,6 @@ const Home = () => {
                   <ChevronRight className="ml-3 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </button>
                 
-              </div>
-              
-              {/* Metrics */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16 pt-8 border-t border-gray-200">
-                {metrics.map((metric, idx) => {
-                  const Icon = metric.icon;
-                  return (
-                    <div key={idx} className="text-center">
-                      <div className="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-gradient-to-br from-blue-100 to-cyan-100 mb-3">
-                        <Icon className="w-6 h-6 text-blue-600" />
-                      </div>
-                      <div className="text-2xl font-bold text-gray-900 mb-1">{metric.value}</div>
-                      <div className="text-sm text-gray-600">{metric.label}</div>
-                    </div>
-                  );
-                })}
               </div>
             </div>
             
@@ -140,7 +124,7 @@ const Home = () => {
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
               Professional Tools for
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">
+              <span className="py-2 block text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">
                 Modern Coaching
               </span>
             </h2>
@@ -216,25 +200,6 @@ const Home = () => {
               </div>
             ))}
           </div>
-          
-          {/* Tech Stack */}
-          <div className="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-2xl p-8">
-            <div className="flex flex-col md:flex-row items-center justify-between">
-              <div className="mb-6 md:mb-0">
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">Built with Modern Technology</h3>
-                <p className="text-gray-600">Powered by the latest tech stack for reliability and performance</p>
-              </div>
-              
-              <div className="flex flex-wrap gap-3">
-                {techStack.map((tech, idx) => (
-                  <div key={idx} className={`px-4 py-2 rounded-lg ${tech.color} flex items-center`}>
-                    <span className="mr-2">{tech.icon}</span>
-                    <span className="font-medium">{tech.name}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -244,7 +209,7 @@ const Home = () => {
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
               Trusted by Elite
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">
+              <span className="block py-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">
                 Programs Worldwide
               </span>
             </h2>
@@ -316,7 +281,7 @@ const Home = () => {
           
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-8">
             Ready to Elevate Your
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">
+            <span className="block py-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">
               Athletic Program?
             </span>
           </h2>
@@ -331,13 +296,8 @@ const Home = () => {
               className="group inline-flex items-center justify-center px-12 py-5 bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold text-lg rounded-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
             >
               <Play className="w-6 h-6 mr-3" />
-              Start Free Trial
+              Start Mock
               <ChevronRight className="ml-3 w-6 h-6 group-hover:translate-x-1 transition-transform" />
-            </button>
-            
-            <button className="inline-flex items-center justify-center px-12 py-5 bg-white/20 backdrop-blur-sm border-2 border-white/30 text-white font-semibold text-lg rounded-xl hover:bg-white/30 transition-all duration-300">
-              <Users className="w-6 h-6 mr-3" />
-              Book Team Demo
             </button>
           </div>
           
