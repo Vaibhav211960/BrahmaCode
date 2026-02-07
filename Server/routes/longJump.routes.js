@@ -1,4 +1,6 @@
 import express from "express"
+const router = express.Router()
+
 
 import {
     createLongJumpTest,
@@ -11,3 +13,5 @@ router.post("/longjump/create", createLongJumpTest);
 router.get("/longjump/weakness/:athleteId", getLongJumpWeakness);
 router.get("/longjump/injury-risk/:athleteId", getLongJumpInjuryRisk);
 router.get("/get/:athleteId", getLongJumpScore);
+
+export default router;
