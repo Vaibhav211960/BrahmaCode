@@ -1,0 +1,71 @@
+:root {
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --bg-white: #ffffff;
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 5%;
+  background-color: var(--bg-white);
+  border-bottom: 1px solid #e2e8f0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  font-family: 'Inter', sans-serif;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  font-weight: 800;
+  font-size: 1.5rem;
+  color: var(--primary);
+  cursor: pointer;
+}
+
+.logo::after {
+  content: 'SportsTech';
+  margin-left: 8px;
+}
+
+.links {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+}
+
+.links a {
+  text-decoration: none;
+  color: var(--text-muted);
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.links a:hover {
+  color: var(--primary);
+}
+
+.links a.active {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.links a.login {
+  background-color: var(--primary);
+  color: white !important; 
+  padding: 10px 24px;
+  border-radius: 10px;
+  font-weight: 600;
+  box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+}
+
+.links a.login:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-1px);
+}
