@@ -3,43 +3,58 @@ import mongoose from "mongoose";
 const yoloModel = new mongoose.Schema(
   {
     name: { 
-        type: "String",
+        type: String,
         required: true,
     },
-    sport: {
-        type: "String",
+    athleteId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Athlete",
         required: true,
     },
-    bmi: {
-        type: "Number",
+    
+    age: {
+        type: Number,
         required: true,
     },
+    gender: {
+        type: String,
+        required: true,
+    },
+    ankleDorsiflexion: {
+        type: Number,
+        required: true,
+    },
+    singleLegBalance: {
+        type: Number,
+        required: true,
+    },
+    agilityTtest: {
+        type: Number,
+        required: true,
+    },
+
     verticalJump: {
-        type: "Number",
+        type: Number,
         required: true,
     },
     broadJump: {
-        type: "Number",
+        type: Number,
         required: true,
     },
     sprintTime: {
-        type: "Number",
-        required: true,
-    },
-    sprintSpeed: {
-        type: "Number",
+        type: Number,
         required: true,
     },
     beepTest: {
-        type: "Number",
+        type: Number,
         required: true,
     },
     wallSit: {
-        type: "Number",
+        type: Number,
         required: true,
     },
     cooperTest: {
-        type: "Number", 
+        type: Number, 
         required: true,
     },
   },
