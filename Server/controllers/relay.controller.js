@@ -1,5 +1,5 @@
 import Relay from "../models/relay.model.js";
-import { accelerationExchangeConfig } from "../utils/relayConfig.js";
+import { relayConfig } from "../utils/relayConfig.js";
 
 export const createRelayTest = async (req, res) => {
   try {
@@ -26,14 +26,13 @@ export const createRelayTest = async (req, res) => {
       });
     }
 
-    // 🔹 Create test using rule engine
     const test = await Relay.create({
       athleteId,
 
       accelerationDistance: {
         value: accelerationDistance,
         status:
-          accelerationExchangeConfig.accelerationDistance.evaluate(
+          relayConfig.accelerationDistance.evaluate(
             accelerationDistance
           ),
         note: notes.accelerationDistance || "",
@@ -42,7 +41,7 @@ export const createRelayTest = async (req, res) => {
       batonExchange: {
         value: batonExchange,
         status:
-          accelerationExchangeConfig.batonExchange.evaluate(
+          relayConfig.batonExchange.evaluate(
             batonExchange
           ),
         note: notes.batonExchange || "",
@@ -51,14 +50,14 @@ export const createRelayTest = async (req, res) => {
       armAngle: {
         value: armAngle,
         status:
-          accelerationExchangeConfig.armAngle.evaluate(armAngle),
+          relayConfig.armAngle.evaluate(armAngle),
         note: notes.armAngle || "",
       },
 
       verbalCueTiming: {
         value: verbalCueTiming,
         status:
-          accelerationExchangeConfig.verbalCueTiming.evaluate(
+          relayConfig.verbalCueTiming.evaluate(
             verbalCueTiming
           ),
         note: notes.verbalCueTiming || "",
@@ -67,7 +66,7 @@ export const createRelayTest = async (req, res) => {
       legMuscleTightness: {
         value: legMuscleTightness,
         status:
-          accelerationExchangeConfig.legMuscleTightness.evaluate(
+          relayConfig.legMuscleTightness.evaluate(
             legMuscleTightness
           ),
         note: notes.legMuscleTightness || "",

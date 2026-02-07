@@ -37,6 +37,6 @@ const accelerationExchangeTestSchema = new mongoose.Schema(
 );
 
 export default mongoose.model(
-  "AccelerationExchangeTest",
+  "Relay",
   accelerationExchangeTestSchema
 );

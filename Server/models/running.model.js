@@ -48,4 +48,4 @@ const runningTestSchema = new mongoose.Schema(
 );
 
 
-export default mongoose.model("RunningTest", runningTestSchema);
+export default mongoose.model("Running", runningTestSchema);
