@@ -1,7 +1,23 @@
-import React from 'react';
-import { Activity, ShieldCheck, BarChart3, ArrowRight, Users, Trophy, TrendingUp, Star, Zap, Target, Award, CheckCircle } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import photo from "../assets/spot.png"
+import { 
+  Play, Trophy, Users, Target, Shield, Zap, 
+  BarChart3, ChevronRight, Star, Activity, Sparkles, 
+  CheckCircle, Smartphone, Cloud, Heart, LineChart, TargetIcon
+} from 'lucide-react';
 
 const Home = () => {
+  const [currentFeature, setCurrentFeature] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    setIsVisible(true);
+    const interval = setInterval(() => {
+      setCurrentFeature((prev) => (prev + 1) % 3);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
+
   const handleNavigation = (section) => {
     if (section === 'yolo-test') {
       window.location.href = '/yolo-test';
@@ -10,375 +26,335 @@ const Home = () => {
     }
   };
 
+  const metrics = [
+    { value: "10K+", label: "Athletes Tracked", icon: Users },
+    { value: "98%", label: "Accuracy", icon: Target },
+    { value: "500+", label: "Teams Worldwide", icon: Cloud },
+    { value: "24/7", label: "Support", icon: Shield }
+  ];
+
+  const testimonials = [
+    {
+      name: "Coach Marcus Rodriguez",
+      role: "Head Coach, NCAA Division I",
+      quote: "ArenaFitCheck transformed our recruitment process. The AI-driven insights helped us identify talents we would have otherwise missed.",
+      score: "92/100",
+      image: "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
+    },
+    {
+      name: "Dr. Sarah Chen",
+      role: "Sports Scientist",
+      quote: "The injury prevention analytics reduced our athletes' downtime by 65%. Game-changing technology for modern sports.",
+      score: "88/100",
+      image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
+    },
+    {
+      name: "James Wilson",
+      role: "Director, Elite Academy",
+      quote: "From grassroots to professional levels, ArenaFitCheck delivers consistent, reliable performance data we trust.",
+      score: "95/100",
+      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
+    }
+  ];
+
+  const techStack = [
+    { name: "React 18", icon: "⚛️", color: "bg-blue-100 text-blue-800" },
+    { name: "TensorFlow", icon: "🤖", color: "bg-orange-100 text-orange-800" },
+    { name: "WebRTC", icon: "📹", color: "bg-green-100 text-green-800" },
+    { name: "Cloud AI", icon: "☁️", color: "bg-purple-100 text-purple-800" }
+  ];
+
   return (
-    <div className="min-h-screen font-sans">
-      {/* Hero Section with Full Background Image */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Background Image with Overlay */}
-        <div className="absolute inset-0 z-0">
-          <img 
-            src="https://images.unsplash.com/photo-1536922246289-88c42f957773?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
-            alt="Athlete running on track"
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-gray-900/90 via-gray-900/80 to-transparent"></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/50 to-transparent"></div>
-        </div>
-
-        {/* Animated Elements */}
-        <div className="absolute inset-0 z-0">
-          <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-blue-500/20 rounded-full mix-blend-screen blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full mix-blend-screen blur-3xl animate-pulse" style={{animationDelay: '2s'}}></div>
-          <div className="absolute top-3/4 left-3/4 w-64 h-64 bg-cyan-500/20 rounded-full mix-blend-screen blur-3xl animate-pulse" style={{animationDelay: '4s'}}></div>
-        </div>
-
-        {/* Content */}
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+    <div className="min-h-screen bg-white font-sans">
+      
+      {/* Hero Section */}
+      <section className="pt-24 pb-12 md:pt-16 md:pb-12  bg-gradient-to-br from-blue-50 via-white to-cyan-50">
+        <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Left Column - Text Content */}
-            <div className="text-white">
-              {/* Logo */}
-              <div className="flex items-center space-x-3 mb-8">
-                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-2xl">
-                  <ShieldCheck className="w-7 h-7 text-white" />
-                </div>
-                <span className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-blue-100">
-                  ArenaFeetCheck
-                </span>
-              </div>
-
-              {/* Tagline */}
-              <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-8">
-                <Star className="w-4 h-4 mr-2 text-yellow-400" />
-                <span className="text-sm font-medium text-white">Revolutionizing Grassroots Sports</span>
-              </div>
-
-              {/* Main Headline */}
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-                Elite Performance
-                <span className="block bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-cyan-400 to-purple-400">
-                  Data Analytics
+            
+            {/* Left Content */}
+            <div className={`transition-all duration-700 ${isVisible ? 'translate-x-0 opacity-100' : '-translate-x-10 opacity-0'}`}>
+              
+              <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+                Elevate Athletic
+                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">
+                  Performance
                 </span>
               </h1>
-
-              {/* Description */}
-              <p className="text-xl text-gray-200 mb-10 max-w-xl leading-relaxed">
-                Transform raw athletic potential into measurable excellence with our 
-                AI-powered platform. No expensive sensors required—just pure data-driven insights.
+              
+              <p className="text-xl text-gray-600 mb-10 max-w-xl leading-relaxed font-semibold">
+                ArenaFitCheck combines cutting-edge AI with sports science to deliver 
+                professional-grade performance analytics for modern coaching.
               </p>
-
-              {/* CTA Buttons */}
+              
               <div className="flex flex-col sm:flex-row gap-4">
                 <button 
                   onClick={() => handleNavigation('yolo-test')}
-                  className="group relative inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-2xl overflow-hidden"
+                  className="group inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold rounded-xl hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  <span className="relative flex items-center">
-                    Start YOLO Test
-                    <ArrowRight className="ml-3 group-hover:translate-x-2 transition-transform" size={20} />
-                  </span>
+                  <Play className="w-5 h-5 mr-3" />
+                  Start Free Analysis
+                  <ChevronRight className="ml-3 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </button>
                 
-                <button className="group inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white border-2 border-white/30 rounded-xl hover:bg-white/10 transition-all duration-300 backdrop-blur-sm">
-                  <span className="relative">Watch Demo</span>
-                  <div className="ml-3 w-6 h-6 rounded-full border-2 border-white/50 group-hover:border-white transition-colors flex items-center justify-center">
-                    <div className="w-2 h-2 bg-white rounded-full"></div>
-                  </div>
-                </button>
               </div>
-
-              {/* Stats */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16 pt-8 border-t border-white/20">
-                {[
-                  { value: '10K+', label: 'Athletes Assessed', icon: Users },
-                  { value: '95%', label: 'Accuracy Rate', icon: Target },
-                  { value: '40%', label: 'Injury Reduction', icon: Activity },
-                  { value: '4.9/5', label: 'Coach Rating', icon: Star }
-                ].map((stat, index) => {
-                  const Icon = stat.icon;
+              
+              {/* Metrics */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16 pt-8 border-t border-gray-200">
+                {metrics.map((metric, idx) => {
+                  const Icon = metric.icon;
                   return (
-                    <div key={index} className="text-center group">
-                      <div className="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-white/10 mb-3 group-hover:bg-white/20 transition-colors">
-                        <Icon className="w-5 h-5 text-blue-400" />
+                    <div key={idx} className="text-center">
+                      <div className="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-gradient-to-br from-blue-100 to-cyan-100 mb-3">
+                        <Icon className="w-6 h-6 text-blue-600" />
                       </div>
-                      <div className="text-2xl font-bold text-white mb-1">{stat.value}</div>
-                      <div className="text-sm text-gray-300">{stat.label}</div>
+                      <div className="text-2xl font-bold text-gray-900 mb-1">{metric.value}</div>
+                      <div className="text-sm text-gray-600">{metric.label}</div>
                     </div>
                   );
                 })}
               </div>
             </div>
-
-            {/* Right Column - Feature Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {/* YOLO Test Card */}
-              <div 
-                onClick={() => handleNavigation('yolo-test')}
-                className="group relative bg-gradient-to-br from-gray-900/90 to-gray-900/70 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-blue-500/50 transition-all duration-300 transform hover:-translate-y-2 cursor-pointer hover:shadow-2xl"
-              >
-                <div className="absolute -top-3 -right-3 w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg">
-                  <TrendingUp className="w-6 h-6 text-white" />
-                </div>
-                <h3 className="text-xl font-bold text-white mb-3">YOLO Test</h3>
-                <p className="text-gray-300 text-sm mb-4">Comprehensive 10-test fitness assessment with instant AI analysis</p>
-                <div className="flex items-center text-blue-400 text-sm font-medium">
-                  <span>Explore Tests</span>
-                  <ArrowRight className="ml-2 group-hover:translate-x-2 transition-transform" size={16} />
-                </div>
-              </div>
-
-              {/* Trial Run Card */}
-              <div className="group relative bg-gradient-to-br from-gray-900/90 to-gray-900/70 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-red-500/50 transition-all duration-300 transform hover:-translate-y-2 cursor-pointer hover:shadow-2xl">
-                <div className="absolute -top-3 -right-3 w-12 h-12 bg-gradient-to-r from-red-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg">
-                  <Zap className="w-6 h-6 text-white" />
-                </div>
-                <h3 className="text-xl font-bold text-white mb-3">Trial Run</h3>
-                <p className="text-gray-300 text-sm mb-4">Load management & injury prevention analytics</p>
-                <div className="flex items-center text-red-400 text-sm font-medium">
-                  <span>Monitor Athletes</span>
-                  <ArrowRight className="ml-2 group-hover:translate-x-2 transition-transform" size={16} />
-                </div>
-              </div>
-
-              {/* Coach Sheet Card */}
-              <div 
-                onClick={() => handleNavigation('coach-sheet')}
-                className="group relative bg-gradient-to-br from-gray-900/90 to-gray-900/70 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-green-500/50 transition-all duration-300 transform hover:-translate-y-2 cursor-pointer hover:shadow-2xl"
-              >
-                <div className="absolute -top-3 -right-3 w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-lg">
-                  <BarChart3 className="w-6 h-6 text-white" />
-                </div>
-                <h3 className="text-xl font-bold text-white mb-3">Coach Sheet</h3>
-                <p className="text-gray-300 text-sm mb-4">Real-time team management dashboard</p>
-                <div className="flex items-center text-green-400 text-sm font-medium">
-                  <span>View Dashboard</span>
-                  <ArrowRight className="ml-2 group-hover:translate-x-2 transition-transform" size={16} />
-                </div>
-              </div>
-
-              {/* Demo Card */}
-              <div className="group relative bg-gradient-to-br from-gray-900/90 to-gray-900/70 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-purple-500/50 transition-all duration-300 transform hover:-translate-y-2 cursor-pointer hover:shadow-2xl">
-                <div className="absolute -top-3 -right-3 w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg">
-                  <Award className="w-6 h-6 text-white" />
-                </div>
-                <h3 className="text-xl font-bold text-white mb-3">Live Demo</h3>
-                <p className="text-gray-300 text-sm mb-4">See the platform in action with sample data</p>
-                <div className="flex items-center text-purple-400 text-sm font-medium">
-                  <span>Request Demo</span>
-                  <ArrowRight className="ml-2 group-hover:translate-x-2 transition-transform" size={16} />
-                </div>
+            
+            {/* Right - Clean Image ONLY */}
+            <div className={`relative transition-all duration-700 delay-300 ${isVisible ? 'translate-x-0 opacity-100' : 'translate-x-10 opacity-0'}`}>
+              {/* Main Image ONLY */}
+              <div className="relative rounded-3xl overflow-hidden shadow-2xl">
+                <img 
+                  src={photo}
+                  alt="Athlete performing sprint test"
+                  className="w-full h-[500px] object-cover"
+                />
+                {/* Gradient Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-blue-900/20 via-transparent to-transparent"></div>
               </div>
             </div>
-          </div>
-        </div>
-
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10">
-          <div className="animate-bounce">
-            <div className="w-6 h-10 border-2 border-white/50 rounded-full flex justify-center">
-              <div className="w-1 h-3 bg-white/70 rounded-full mt-2"></div>
-            </div>
+            
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-900 to-gray-950">
+      <section id="features" className="py-20 px-6 bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <div className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-blue-500/30 text-blue-300 text-sm font-medium mb-6">
-              <CheckCircle className="w-4 h-4 mr-2" />
-              Trusted by 500+ Academies Worldwide
-            </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-              Everything You Need for 
-              <span className="block bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-400">
-                Modern Athlete Management
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              Professional Tools for
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">
+                Modern Coaching
               </span>
             </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Comprehensive analytics suite designed by sports scientists and elite coaches
+            </p>
           </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
+          
+          <div className="grid md:grid-cols-3 gap-8 mb-20">
             {[
               {
-                title: "YOLO Test Suite",
-                description: "10 standardized fitness tests including vertical jump, sprint times, and endurance assessments with instant AI-powered analysis.",
-                features: ["AI-Powered Analysis", "Real-time Scoring", "Historical Tracking", "Progress Reports"],
-                Icon: TrendingUp,
+                title: "YOLO Test System",
+                description: "10 standardized fitness assessments with real-time AI analysis",
+                icon: <TargetIcon className="w-8 h-8" />,
+                features: ["Vertical Jump", "Sprint Timing", "Endurance Tests", "Agility Scoring"],
                 color: "from-blue-500 to-cyan-500",
-                buttonText: "Run Assessment"
+                image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                action: () => handleNavigation('yolo-test')
               },
               {
-                title: "Trial Run Analytics",
-                description: "Advanced load management and wellness tracking to prevent injuries and optimize training intensity for each athlete.",
-                features: ["Load Management", "Recovery Tracking", "Injury Alerts", "Wellness Monitoring"],
-                Icon: Activity,
-                color: "from-red-500 to-pink-500",
-                buttonText: "Monitor Athletes"
-              },
-              {
-                title: "Coach Sheet Pro",
-                description: "Comprehensive dashboard for managing entire teams, identifying talent trends, and making data-driven decisions.",
-                features: ["Team Analytics", "Performance Trends", "Talent Identification", "Custom Reports"],
-                Icon: BarChart3,
+                title: "Coach Dashboard Pro",
+                description: "Complete team management with advanced analytics",
+                icon: <LineChart className="w-8 h-8" />,
+                features: ["Team Analytics", "Progress Tracking", "Custom Reports", "Export Tools"],
                 color: "from-green-500 to-emerald-500",
-                buttonText: "Access Dashboard"
+                image: "https://images.unsplash.com/photo-1518611012118-696072aa579a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                action: () => handleNavigation('coach-sheet')
+              },
+              {
+                title: "Injury Prevention AI",
+                description: "Predictive analytics for athlete health management",
+                icon: <Heart className="w-8 h-8" />,
+                features: ["Load Monitoring", "Recovery Tracking", "Risk Assessment", "Preventive Alerts"],
+                color: "from-purple-500 to-pink-500",
+                image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                action: () => {}
               }
-            ].map((feature, index) => (
-              <div key={index} className="group relative bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-700 hover:border-gray-600 transition-all duration-300 hover:shadow-2xl">
-                <div className={`absolute -top-6 left-1/2 transform -translate-x-1/2 w-14 h-14 bg-gradient-to-r ${feature.color} rounded-xl flex items-center justify-center shadow-xl`}>
-                  <feature.Icon className="w-7 h-7 text-white" />
+            ].map((feature, idx) => (
+              <div 
+                key={idx}
+                className="group bg-white border-2 border-gray-200 rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer hover:border-blue-200"
+                onClick={feature.action}
+              >
+                {/* Feature Image ONLY */}
+                <div className="relative h-48 overflow-hidden">
+                  <img 
+                    src={feature.image}
+                    alt={feature.title}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
                 </div>
                 
-                <div className="pt-8 text-center">
-                  <h3 className="text-2xl font-bold text-white mb-4">{feature.title}</h3>
-                  <p className="text-gray-300 mb-6 leading-relaxed">{feature.description}</p>
+                {/* Feature Content */}
+                <div className="p-8">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4">{feature.title}</h3>
+                  <p className="text-gray-600 mb-6 leading-relaxed">{feature.description}</p>
                   
                   <div className="space-y-3 mb-8">
                     {feature.features.map((item, idx) => (
-                      <div key={idx} className="flex items-center justify-center text-gray-300">
-                        <CheckCircle className="w-4 h-4 mr-2 text-green-500" />
-                        <span className="text-sm">{item}</span>
+                      <div key={idx} className="flex items-center">
+                        <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
+                        <span className="text-gray-700">{item}</span>
                       </div>
                     ))}
                   </div>
                   
-                  <button 
-                    onClick={() => handleNavigation(index === 0 ? 'yolo-test' : index === 2 ? 'coach-sheet' : '')}
-                    className="group inline-flex items-center justify-center px-6 py-3 text-white bg-gradient-to-r from-gray-700 to-gray-800 rounded-lg hover:from-gray-600 hover:to-gray-700 transition-all duration-300 border border-gray-600"
-                  >
-                    {feature.buttonText}
-                    <ArrowRight className="ml-2 group-hover:translate-x-2 transition-transform" size={18} />
+                  <button className="group inline-flex items-center text-blue-600 font-semibold hover:text-blue-700">
+                    Learn More
+                    <ChevronRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                   </button>
                 </div>
               </div>
             ))}
           </div>
+          
+          {/* Tech Stack */}
+          <div className="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-2xl p-8">
+            <div className="flex flex-col md:flex-row items-center justify-between">
+              <div className="mb-6 md:mb-0">
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">Built with Modern Technology</h3>
+                <p className="text-gray-600">Powered by the latest tech stack for reliability and performance</p>
+              </div>
+              
+              <div className="flex flex-wrap gap-3">
+                {techStack.map((tech, idx) => (
+                  <div key={idx} className={`px-4 py-2 rounded-lg ${tech.color} flex items-center`}>
+                    <span className="mr-2">{tech.icon}</span>
+                    <span className="font-medium">{tech.name}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* Testimonials */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-950 to-black">
+      <section id="testimonials" className="py-20 px-6 bg-gray-50">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-white mb-6">
-              Transforming 
-              <span className="block bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-400">
-                Athlete Development
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              Trusted by Elite
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">
+                Programs Worldwide
               </span>
             </h2>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                quote: "The YOLO Test gave us insights into our athletes that traditional methods missed. Our injury rates dropped by 65%.",
-                name: "Coach Marcus Lee",
-                role: "Director, Velocity Athletics",
-                image: "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-4.0.3&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-              },
-              {
-                quote: "Finally, a platform that bridges the gap between sports science and practical coaching. Game-changing technology.",
-                name: "Dr. Sarah Chen",
-                role: "Sports Scientist, Elite Performance",
-                image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-              },
-              {
-                quote: "The Coach Sheet dashboard has become our single source of truth for all performance data. Incredibly intuitive.",
-                name: "James Wilson",
-                role: "Head Coach, Future Stars Academy",
-                image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-              }
-            ].map((testimonial, index) => (
-              <div key={index} className="relative bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-700 hover:border-cyan-500/30 transition-all duration-300">
-                <div className="absolute -top-4 left-8">
-                  <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-cyan-500/50">
+          <div className="grid md:grid-cols-3 gap-8 mb-16">
+            {testimonials.map((testimonial, idx) => (
+              <div key={idx} className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200">
+                <div className="flex items-center mb-6">
+                  <div className="w-16 h-16 rounded-full overflow-hidden">
                     <img 
-                      src={testimonial.image} 
+                      src={testimonial.image}
                       alt={testimonial.name}
                       className="w-full h-full object-cover"
                     />
                   </div>
+                  <div className="ml-4">
+                    <div className="font-bold text-gray-900">{testimonial.name}</div>
+                    <div className="text-blue-600">{testimonial.role}</div>
+                  </div>
                 </div>
                 
-                <div className="flex mb-6 pt-4">
+                <div className="flex mb-6">
                   {[...Array(5)].map((_, i) => (
-                    <svg key={i} className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
+                    <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
                   ))}
                 </div>
                 
-                <p className="text-gray-300 italic mb-8 leading-relaxed">"{testimonial.quote}"</p>
+                <p className="text-gray-600 italic mb-6 leading-relaxed">"{testimonial.quote}"</p>
                 
-                <div className="border-t border-gray-700 pt-6">
-                  <div className="font-bold text-white text-lg">{testimonial.name}</div>
-                  <div className="text-sm text-cyan-400">{testimonial.role}</div>
+                <div className="border-t border-gray-200 pt-6">
+                  <div className="flex justify-between items-center">
+                    <div className="text-sm text-gray-500">Platform Score</div>
+                    <div className="text-2xl font-bold text-gray-900">{testimonial.score}</div>
+                  </div>
                 </div>
+              </div>
+            ))}
+          </div>
+          
+          {/* Trust Badges */}
+          <div className="flex flex-wrap justify-center gap-8 opacity-75">
+            {["NCAA", "PROFESSIONAL", "ACADEMY", "INTERNATIONAL"].map((badge, idx) => (
+              <div key={idx} className="text-center">
+                <div className="text-3xl font-bold text-gray-300 mb-2">{badge}</div>
+                <div className="text-sm text-gray-500">Partner</div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="relative py-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-blue-900/20 to-purple-900/20">
-          <div className="absolute inset-0 opacity-5" style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-            backgroundSize: '60px 60px'
-          }}></div>
+      {/* Final CTA */}
+      <section className="relative py-32 px-6 overflow-hidden">
+        {/* Background Image ONLY */}
+        <div className="absolute inset-0">
+          <img 
+            src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
+            alt="Athlete background"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-900/90 via-blue-900/80 to-blue-900/90"></div>
         </div>
 
-        <div className="relative max-w-4xl mx-auto text-center z-10">
-          <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 mb-8 shadow-2xl">
+        <div className="relative max-w-4xl mx-auto text-center">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-2xl mb-8 shadow-xl">
             <Trophy className="w-10 h-10 text-white" />
           </div>
           
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Start Your Free
-            <span className="block bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-400">
-              Performance Journey
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-8">
+            Ready to Elevate Your
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">
+              Athletic Program?
             </span>
           </h2>
           
-          <p className="text-xl text-gray-300 mb-10 max-w-2xl mx-auto leading-relaxed">
-            Join elite academies worldwide in building the next generation of athletes with data-driven insights.
+          <p className="text-xl text-gray-300 mb-12 max-w-2xl mx-auto">
+            Join thousands of coaches worldwide who trust ArenaFitCheck for professional performance analytics
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-6 justify-center">
             <button 
               onClick={() => handleNavigation('yolo-test')}
-              className="group relative inline-flex items-center justify-center px-10 py-5 text-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-2xl overflow-hidden"
+              className="group inline-flex items-center justify-center px-12 py-5 bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold text-lg rounded-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              <span className="relative flex items-center">
-                Start Free Trial
-                <ArrowRight className="ml-3 group-hover:translate-x-2 transition-transform" size={20} />
-              </span>
+              <Play className="w-6 h-6 mr-3" />
+              Start Free Trial
+              <ChevronRight className="ml-3 w-6 h-6 group-hover:translate-x-1 transition-transform" />
             </button>
             
-            <button className="group inline-flex items-center justify-center px-10 py-5 text-lg font-semibold text-white border-2 border-white/30 rounded-xl hover:bg-white/10 transition-all duration-300 backdrop-blur-sm">
-              <span className="relative">Book a Demo</span>
-              <div className="ml-3 w-6 h-6 rounded-full border-2 border-white/50 group-hover:border-white transition-colors flex items-center justify-center">
-                <div className="w-2 h-2 bg-white rounded-full"></div>
-              </div>
+            <button className="inline-flex items-center justify-center px-12 py-5 bg-white/20 backdrop-blur-sm border-2 border-white/30 text-white font-semibold text-lg rounded-xl hover:bg-white/30 transition-all duration-300">
+              <Users className="w-6 h-6 mr-3" />
+              Book Team Demo
             </button>
           </div>
           
-          <div className="mt-12 pt-8 border-t border-white/20">
+          <div className="mt-16 pt-8 border-t border-white/20">
             <div className="flex flex-col md:flex-row items-center justify-between">
-              <div className="flex items-center space-x-3 mb-6 md:mb-0">
-                <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center shadow-lg">
-                  <ShieldCheck className="w-6 h-6 text-white" />
+              <div className="flex items-center space-x-4 mb-6 md:mb-0">
+                <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-cyan-500 rounded-xl flex items-center justify-center">
+                  <div className="text-white font-bold text-xl">AFC</div>
                 </div>
-                <span className="text-xl font-bold text-white">ArenaFeetCheck</span>
+                <div>
+                  <div className="text-xl font-bold text-white">ArenaFitCheck</div>
+                  <div className="text-gray-400 text-sm">Sports Performance Analytics</div>
+                </div>
               </div>
               
               <div className="text-gray-400 text-sm">
-                © {new Date().getFullYear()} ArenaFeetCheck. Revolutionizing sports analytics.
+                © {new Date().getFullYear()} ArenaFitCheck. Made for the hackathon.
               </div>
             </div>
           </div>

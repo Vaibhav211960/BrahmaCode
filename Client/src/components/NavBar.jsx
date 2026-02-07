@@ -6,8 +6,10 @@ const NavBar = () => {
   return (
 
     <nav>
-        <div className='logo'>
-            <img src="" alt="" />
+        <div className="flex items-center space-x-3 mt-2 mb-2">
+                <span className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-blue-900">
+                  ArenaFeetCheck
+                </span>
         </div>
         <div className='links'>
             <NavLink to="/">

@@ -11,8 +11,7 @@ nav {
   justify-content: space-between;
   align-items: center;
   padding: 1rem 5%;
-  background-color: var(--bg-white);
-  border-bottom: 1px solid #e2e8f0;
+  background-color: rgba(0, 0, 0, 0.85);
   position: sticky;
   top: 0;
   z-index: 1000;
