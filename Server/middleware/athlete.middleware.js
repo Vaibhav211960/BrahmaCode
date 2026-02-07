@@ -13,7 +13,7 @@ const authenticate = async (req, res, next) => {
         if (!athlete) {
             return res.status(401).json({ message: "Invalid token. Athlete not found." });
         }   
-        req.body = athlete;
+        req.user = athlete;
         next();
     } catch (error) {
         res.status(400).json({ message: "Invalid token.", error: error.message });
