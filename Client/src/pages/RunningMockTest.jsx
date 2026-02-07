@@ -161,13 +161,8 @@ const RunningMockTest = () => {
               </div>
             </div>
           </div>
-<<<<<<< HEAD
-
-          {/* Right Column (Sidebar Scorecard) */}
-=======
           
           {/* Right Column - Results & Analysis */}
->>>>>>> b522d4f52f7b046b6c0c6dedf7c270001ad6adcf
           <div className="space-y-6">
             <div className={`rounded-[2.5rem] border ${getScoreBg(techniqueScore)} p-8 shadow-xl text-center`}>
               <Award className="w-12 h-12 text-amber-500 mx-auto mb-4" />

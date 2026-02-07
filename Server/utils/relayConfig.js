@@ -1,4 +1,4 @@
-export const accelerationExchangeConfig = {
+export const relayConfig = {
   accelerationDistance: {
     correctValue: 20,
     evaluate: (value) =>
