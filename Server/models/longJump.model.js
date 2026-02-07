@@ -47,4 +47,4 @@ const longJumpTestSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.model("LongJumpTest", longJumpTestSchema);
+export default mongoose.model("LongJump", longJumpTestSchema);
