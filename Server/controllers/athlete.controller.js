@@ -1,40 +1,15 @@
 import { validationResult } from "express-validator";
-<<<<<<< HEAD
-
-import Athlete from "../models/athlete.model.js";
-
-export const register = async (req, res) => {
-  try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-
-    const { email, name, password, sport } = req.body;
-    console.log(req.body);
-
-    const existingUser = await Athlete.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: "Email already in use" });
-    }
-
-    const hashedPassword = await Athlete.hashPassword(password);
-    const newAthlete = new Athlete({
-      name,
-      email,
-      password: hashedPassword,
-      ...(sport && { sport }),
-=======
 import athleteModel from "../models/athlete.model.js";
-import generateOtp  from "../utils/OTPGenerator.js";
-import transporter  from "../config/transporter.js";
+import generateOtp from "../utils/OTPGenerator.js";
+import transporter from "../config/transporter.js";
 import otpStore from "../utils/OTPStore.js";
 import jwt from "jsonwebtoken";
 import Coach from "../models/coach.model.js";
+import { handleInvitation } from "../services/userServices.js";
 
 export const sendotp = async (req, res) => {
   try {
-    const { name , email , password , role , sport } = req.body;
+    const { name, email, password, role, sport } = req.body;
     const existingUser = await athleteModel.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "Email already in use" });
@@ -44,16 +19,17 @@ export const sendotp = async (req, res) => {
     const newAthlete = new athleteModel({
       name,
       email,
-      password : hashPass,
+      password: hashPass,
       sport,
-      role
+      role,
     });
 
-    newAthlete.save()
-    
-    const token = newAthlete.generateAuthToken();
-    res.status(200).json({ message: "Athlete created successfully" , newAthlete , token });
+    newAthlete.save();
 
+    const token = newAthlete.generateAuthToken();
+    res
+      .status(200)
+      .json({ message: "Athlete created successfully", newAthlete, token });
   } catch (error) {
     console.log(error);
     res
@@ -88,16 +64,11 @@ export const verifyOtpAndCompleteRegistration = async (req, res) => {
       name,
       email,
       password: hashedPassword,
->>>>>>> 623a52a1c719b555a9acecfb5d31268b08cc7ed5
     });
 
     await newAthlete.save();
 
     const token = newAthlete.generateAuthToken();
-<<<<<<< HEAD
-
-=======
->>>>>>> 623a52a1c719b555a9acecfb5d31268b08cc7ed5
     res.cookie("token", token, {
       httpOnly: true,
       secure: true,
@@ -109,89 +80,39 @@ export const verifyOtpAndCompleteRegistration = async (req, res) => {
       message: "Athlete registered successfully",
     });
   } catch (error) {
-<<<<<<< HEAD
-    console.log(error);
-=======
->>>>>>> 623a52a1c719b555a9acecfb5d31268b08cc7ed5
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
-<<<<<<< HEAD
-export const loginAthlete = async (req, res) => {
-  try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-
-    const { email, password } = req.body;
-
-    const athlete = await Athlete.findOne({ email });
-    if (!athlete) {
-      return res.status(400).json({ message: "Invalid email or password" });
-    }
-
-    const isMatch = await athlete.comparePassword(password);
-    if (!isMatch) {
-      return res.status(400).json({ message: "Invalid email or password" });
-    }
-
-    const token = athlete.generateAuthToken();
-
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "Strict",
-    });
-
-    res.status(200).json({
-      success: true,
-      token,
-      user: {
-        id: athlete._id,
-        name: athlete.name,
-        email: athlete.email,
-        sport: athlete.sport,
-      },
-      type: "Athlete",
-      message: "Login successful",
-    });
-  } catch (error) {
-    console.log(error);
-=======
-import Athlete from "../models/athlete.model.js"; // Ensure this matches your file path
+import Athlete from "../models/athlete.model.js";
+import invitationModel from "../models/invitation.model.js";
 
 export const loginAthlete = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // 1. Search using the exported Model name 'Athlete'
-    // Also use .select("+password") if you set select: false in your schema
     const athlete = await Athlete.findOne({ email });
 
-    // 2. Check if athlete exists
     if (!athlete) {
-      return res.status(404).json({ message: "Athlete not found with this email" });
+      return res
+        .status(404)
+        .json({ message: "Athlete not found with this email" });
     }
 
-    // 3. Compare Password
     const isMatch = await athlete.comparePassword(password);
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    // 4. Generate Token
     const token = athlete.generateAuthToken();
 
-    // 5. Success Response
     res.status(200).json({
       token,
-      user: { 
-        id: athlete._id, 
-        name: athlete.name, 
-        role: "athlete" // Hardcoded role for redirection logic
-      }
+      user: {
+        id: athlete._id,
+        name: athlete.name,
+        role: "athlete",
+      },
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -308,7 +229,6 @@ export const resendOtp = async (req, res) => {
 
     res.status(200).json({ message: "OTP resent to email for verification" });
   } catch (error) {
->>>>>>> 623a52a1c719b555a9acecfb5d31268b08cc7ed5
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
@@ -316,20 +236,12 @@ export const resendOtp = async (req, res) => {
 export const resetPassword = async (req, res) => {
   try {
     const { email, newPassword } = req.body;
-<<<<<<< HEAD
-    const Athlete = await Athlete.findOne({ email });
-=======
     const Athlete = await athleteModel.findOne({ email });
->>>>>>> 623a52a1c719b555a9acecfb5d31268b08cc7ed5
     if (!Athlete) {
       return res.status(400).json({ message: "Athlete not found" });
     }
 
-<<<<<<< HEAD
-    const hashedPassword = await Athlete.hashPassword(newPassword);
-=======
     const hashedPassword = await athleteModel.hashPassword(newPassword);
->>>>>>> 623a52a1c719b555a9acecfb5d31268b08cc7ed5
     Athlete.password = hashedPassword;
     await Athlete.save();
 
@@ -338,43 +250,49 @@ export const resetPassword = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
-<<<<<<< HEAD
 
-export const updateAthlete = async (req, res) => {
+export const handleCoachInvitation = async (req, res) => {
   try {
-    const { athleteId } = req.params;
-
-    const forbiddenFields = ["history", "password"];
-
-    const updateData = { ...req.body };
-
-    forbiddenFields.forEach((field) => delete updateData[field]);
-
-    const updatedAthlete = await Athlete.findByIdAndUpdate(
-      athleteId,
-      updateData,
-      {
-        new: true,
-        runValidators: true,
-      },
+    const { invitationId, action } = req.body;
+    const result = await userSer.handleInvitation(
+      invitationId,
+      action,
+      req.user.email,
     );
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(400).json({ message: error.message });
+  }
+};
 
-    if (!updatedAthlete) {
-      return res.status(404).json({
-        message: "Athlete not found",
-      });
-    }
+export const getAllInvitations = async (req, res) => {
+  try {
+    const invitations = await invitationModel
+      .find({ email: req.user.email })
+      .populate("invitedBy", "name email");
+    res.status(200).json(invitations);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const getAllAthletes = async (req, res) => {
+  try {
+    const athletes = await Athlete.find()
+      .select("-password") // 🔒 exclude sensitive field
+      .sort({ createdAt: -1 });
 
     res.status(200).json({
-      message: "Athlete updated successfully",
-      data: updatedAthlete,
+      success: true,
+      message: "All athletes fetched successfully",
+      count: athletes.length,
+      data: athletes,
     });
   } catch (error) {
     res.status(500).json({
-      message: "Server error",
+      success: false,
+      message: "Failed to fetch athletes",
       error: error.message,
     });
   }
 };
-=======
->>>>>>> 623a52a1c719b555a9acecfb5d31268b08cc7ed5

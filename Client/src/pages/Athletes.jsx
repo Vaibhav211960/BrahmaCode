@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { 
-  Search, 
-  UserPlus, 
+import React, { useState } from "react";
+import {
+  Search,
+  UserPlus,
   Mail,
   Send,
   X,
@@ -11,68 +11,92 @@ import {
   Trash2,
   Edit,
   ChevronLeft,
-  ChevronRight
-} from 'lucide-react';
+  ChevronRight,
+} from "lucide-react";
 
-const CoachRecipientPage = () => {
-  // Mock data for recipients (only name field)
+import { toast } from "react-hot-toast"
+
+import axios from "axios";
+import { useEffect } from "react";
+
+const Athletes = () => {
   const initialRecipients = [
-    { id: 1, name: 'Rajesh Kumar', email: 'rajesh.kumar@email.com' },
-    { id: 2, name: 'Priya Sharma', email: 'priya.s@email.com' },
-    { id: 3, name: 'Amit Patel', email: 'amit.patel@email.com' },
-    { id: 4, name: 'Sneha Reddy', email: 'sneha.r@email.com' },
-    { id: 5, name: 'Vikram Singh', email: 'vikram.s@email.com' },
-    { id: 6, name: 'Anjali Desai', email: 'anjali.d@email.com' },
-    { id: 7, name: 'Rohan Mehta', email: 'rohan.m@email.com' },
-    { id: 8, name: 'Neha Gupta', email: 'neha.g@email.com' }
+    { id: 1, name: "Rajesh Kumar", email: "rajesh.kumar@email.com" },
+    { id: 2, name: "Priya Sharma", email: "priya.s@email.com" },
+    { id: 3, name: "Amit Patel", email: "amit.patel@email.com" },
+    { id: 4, name: "Sneha Reddy", email: "sneha.r@email.com" },
+    { id: 5, name: "Vikram Singh", email: "vikram.s@email.com" },
+    { id: 6, name: "Anjali Desai", email: "anjali.d@email.com" },
+    { id: 7, name: "Rohan Mehta", email: "rohan.m@email.com" },
+    { id: 8, name: "Neha Gupta", email: "neha.g@email.com" },
   ];
 
-  const [recipients, setRecipients] = useState(initialRecipients);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [disciples, setDisciples] = useState(initialRecipients);
+  const [searchQuery, setSearchQuery] = useState("");
   const [showAddForm, setShowAddForm] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
-  const [newRecipientName, setNewRecipientName] = useState('');
-  const [newRecipientEmail, setNewRecipientEmail] = useState('');
+  const [newRecipientName, setNewRecipientName] = useState("");
+  const [newRecipientEmail, setNewRecipientEmail] = useState("");
   const [sendingInviteId, setSendingInviteId] = useState(null);
   const [inviteSuccess, setInviteSuccess] = useState(null);
-  const [coachEmail] = useState('coach.anand@email.com'); // Current coach's email
+  const [coachEmail] = useState("coach.anand@email.com");
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:3000/api/athlete/all")
+      .then((res) => {
+        setDisciples(res.data.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  });
 
   // Filter recipients based on search
-  const filteredRecipients = recipients.filter(recipient =>
-    recipient.name.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredRecipients = disciples.filter((recipient) =>
+    recipient.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   // Pagination logic
   const totalPages = Math.ceil(filteredRecipients.length / itemsPerPage);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentRecipients = filteredRecipients.slice(indexOfFirstItem, indexOfLastItem);
-
+  const currentRecipients = filteredRecipients.slice(
+    indexOfFirstItem,
+    indexOfLastItem,
+  );
 
   // Delete recipient
   const handleDelete = (id) => {
-    if (window.confirm('Are you sure you want to delete this recipient?')) {
-      setRecipients(recipients.filter(recipient => recipient.id !== id));
+    if (window.confirm("Are you sure you want to delete this recipient?")) {
+      setRecipients(recipients.filter((recipient) => recipient.id !== id));
     }
   };
 
-  // Send invitation to coach
-  const handleSendInvitation = (recipient) => {
-    setSendingInviteId(recipient.id);
-    
-    // Simulate API call
-    setTimeout(() => {
-      console.log(`Invitation sent to Coach ${coachEmail} for recipient: ${recipient.name}`);
-      
-      setSendingInviteId(null);
-      setInviteSuccess(recipient.id);
-      
-      // Reset success message after 3 seconds
-      setTimeout(() => {
+  const handleSendInvitation = (disciple) => {
+    axios
+      .put("http://localhost:3000/api/coaches/add-athlete", {
+        email: disciple.email,
+      }, {
+        headers: {
+          Authorization: localStorage.getItem("token")
+        }
+      })
+      .then((res) => {
+        if(res.status == 200) {
+          toast.success(res.data.message || "Invitation sent successfully")
+        }
+        setSendingInviteId(null);
+        setInviteSuccess(disciple._id);
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error("Failed to send invitation")
+      })
+      .finally(() => {
         setInviteSuccess(null);
-      }, 3000);
-    }, 1500);
+      });
   };
 
   // Pagination handlers
@@ -95,7 +119,7 @@ const CoachRecipientPage = () => {
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-blue-700 flex items-center justify-center">
                   <User className="w-6 h-6 text-white" />
                 </div>
-               Athletes Invitaions
+                Athletes Invitaions
               </h1>
               <p className="text-gray-600 mt-2">Manage athletes invitations</p>
             </div>
@@ -115,7 +139,7 @@ const CoachRecipientPage = () => {
             />
             {searchQuery && (
               <button
-                onClick={() => setSearchQuery('')}
+                onClick={() => setSearchQuery("")}
                 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
               >
                 <X className="w-5 h-5" />
@@ -124,11 +148,13 @@ const CoachRecipientPage = () => {
           </div>
         </div>
 
-        {/* Add Recipient Form */}
+        {/* Add disciple Form */}
         {showAddForm && (
           <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 mb-6">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-xl font-bold text-gray-900">Add New Athelete</h3>
+              <h3 className="text-xl font-bold text-gray-900">
+                Add New Athelete
+              </h3>
               <button
                 onClick={() => setShowAddForm(false)}
                 className="text-gray-400 hover:text-gray-600"
@@ -136,7 +162,7 @@ const CoachRecipientPage = () => {
                 <X className="w-6 h-6" />
               </button>
             </div>
-            
+
             <form onSubmit={handleAddRecipient} className="space-y-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -151,7 +177,7 @@ const CoachRecipientPage = () => {
                   placeholder="Enter Athelete name"
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Email Address *
@@ -165,7 +191,7 @@ const CoachRecipientPage = () => {
                   placeholder="Enter email address"
                 />
               </div>
-              
+
               <div className="flex justify-end gap-3">
                 <button
                   type="button"
@@ -191,7 +217,9 @@ const CoachRecipientPage = () => {
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-xl font-bold text-gray-900">All Atheletes</h3>
               <div className="text-sm text-gray-600">
-                Showing {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, filteredRecipients.length)} of {filteredRecipients.length}
+                Showing {indexOfFirstItem + 1}-
+                {Math.min(indexOfLastItem, filteredRecipients.length)} of{" "}
+                {filteredRecipients.length}
               </div>
             </div>
 
@@ -207,42 +235,56 @@ const CoachRecipientPage = () => {
                   <table className="w-full">
                     <thead>
                       <tr className="bg-gray-50 border-b border-gray-200">
-                        <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Athelete</th>
-                        <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Email</th>
-                        <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">Actions</th>
+                        <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                          Athelete
+                        </th>
+                        <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                          Email
+                        </th>
+                        <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                          Actions
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
-                      {currentRecipients.map(recipient => (
-                        <tr key={recipient.id} className="border-b border-gray-100 hover:bg-gray-50">
+                      {currentRecipients.map((recipient) => (
+                        <tr
+                          key={recipient.id}
+                          className="border-b border-gray-100 hover:bg-gray-50"
+                        >
                           <td className="py-4 px-4">
                             <div className="flex items-center gap-3">
                               <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
                                 <User className="w-5 h-5 text-blue-600" />
                               </div>
-                              <div className="font-medium text-gray-900">{recipient.name}</div>
+                              <div className="font-medium text-gray-900">
+                                {recipient.name}
+                              </div>
                             </div>
                           </td>
-                          
+
                           <td className="py-4 px-4">
                             <div className="flex items-center gap-2 text-gray-600">
                               <Mail className="w-4 h-4" />
                               {recipient.email}
                             </div>
                           </td>
-                          
+
                           <td className="py-4 px-4">
                             <div className="flex items-center gap-2">
                               {/* Send Invitation Button */}
                               <button
                                 onClick={() => handleSendInvitation(recipient)}
-                                disabled={sendingInviteId === recipient.id || inviteSuccess === recipient.id}
+                                disabled={
+                                  sendingInviteId === recipient.id ||
+                                  inviteSuccess === recipient.id
+                                }
                                 className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
                                   sendingInviteId === recipient.id
-                                    ? 'bg-blue-100 text-blue-600 cursor-wait'
+                                    ? "bg-blue-100 text-blue-600 cursor-wait"
                                     : inviteSuccess === recipient.id
-                                    ? 'bg-emerald-100 text-emerald-600 cursor-default'
-                                    : 'bg-blue-50 text-blue-600 hover:bg-blue-100'
+                                      ? "bg-emerald-100 text-emerald-600 cursor-default"
+                                      : "bg-blue-50 text-blue-600 hover:bg-blue-100"
                                 }`}
                               >
                                 {sendingInviteId === recipient.id ? (
@@ -284,21 +326,23 @@ const CoachRecipientPage = () => {
                       >
                         <ChevronLeft className="w-5 h-5" />
                       </button>
-                      
-                      {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-                        <button
-                          key={page}
-                          onClick={() => setCurrentPage(page)}
-                          className={`w-10 h-10 rounded-lg ${
-                            currentPage === page
-                              ? 'bg-blue-600 text-white'
-                              : 'border border-gray-300 hover:bg-gray-50'
-                          }`}
-                        >
-                          {page}
-                        </button>
-                      ))}
-                      
+
+                      {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                        (page) => (
+                          <button
+                            key={page}
+                            onClick={() => setCurrentPage(page)}
+                            className={`w-10 h-10 rounded-lg ${
+                              currentPage === page
+                                ? "bg-blue-600 text-white"
+                                : "border border-gray-300 hover:bg-gray-50"
+                            }`}
+                          >
+                            {page}
+                          </button>
+                        ),
+                      )}
+
                       <button
                         onClick={goToNextPage}
                         disabled={currentPage === totalPages}
@@ -318,4 +362,4 @@ const CoachRecipientPage = () => {
   );
 };
 
-export default CoachRecipientPage;
+export default Athletes;

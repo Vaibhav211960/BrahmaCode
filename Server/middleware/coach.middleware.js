@@ -12,7 +12,7 @@ const authenticateCoach = async (req, res, next) => {
         if (!coachUser) {
             return res.status(401).json({ message: "Invalid token. Coach not found." });
         }       
-        req.body = coachUser;
+        req.user = coachUser;
         next();
     } catch (error) {
         res.status(400).json({ message: "Invalid token.", error: error.message });

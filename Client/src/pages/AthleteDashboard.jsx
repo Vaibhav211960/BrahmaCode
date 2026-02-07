@@ -37,7 +37,6 @@ const AthleteDashboard = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50 p-6 md:p-10 font-sans">
       <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-8">
         
-        {/* SIDEBAR: PROFILE & QUICK INFO */}
         <aside className="w-full lg:w-80 space-y-6">
           <div className="bg-white rounded-[2.5rem] shadow-2xl shadow-blue-100/50 p-8 border border-gray-100 text-center">
             <div className="relative inline-block mb-6">
