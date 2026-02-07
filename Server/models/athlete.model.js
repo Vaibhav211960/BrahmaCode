@@ -1,10 +1,23 @@
 import mongoose from "mongoose";
+<<<<<<< HEAD
+import bcrypt from "bcrypt"
+import jwt from "jsonwebtoken"
+=======
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+>>>>>>> 623a52a1c719b555a9acecfb5d31268b08cc7ed5
 
 const athleteModel = new mongoose.Schema(
   {
     name: {
+<<<<<<< HEAD
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      requried: true,
+=======
       type: String
     },
     email: {
@@ -14,6 +27,7 @@ const athleteModel = new mongoose.Schema(
     role: {
       type: String,
       default: "athlete",
+>>>>>>> 623a52a1c719b555a9acecfb5d31268b08cc7ed5
     },
     password: {
       type: String,
@@ -31,6 +45,18 @@ const athleteModel = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "AthleteHistory",
     },
+<<<<<<< HEAD
+    height: {
+      type: Number,
+    },
+    weight: {
+      type: Number
+    },
+    age: {
+      type: Number
+    }
+=======
+>>>>>>> 623a52a1c719b555a9acecfb5d31268b08cc7ed5
   },
   { timestamps: true },
 );

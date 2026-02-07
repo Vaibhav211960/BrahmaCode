@@ -1,4 +1,21 @@
 import { validationResult } from "express-validator";
+<<<<<<< HEAD
+import coachModel from "../models/coach.model.js";
+
+export const register = async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { email, name, password, academy } = req.body;
+    const existingUser = await coachModel.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: "Email already in use" });
+    }
+
+=======
 import Coach from "../models/coach.model.js";
 import generateOtp from "../utils/OTPGenerator.js";
 import transporter from "../config/transporter.js";
@@ -55,11 +72,16 @@ export const verifyOtpAndCompleteRegistration = async (req, res) => {
 
     otpStore.delete(email);
 
+>>>>>>> 623a52a1c719b555a9acecfb5d31268b08cc7ed5
     const hashedPassword = await coachModel.hashPassword(password);
     const newCoach = new coachModel({
       name,
       email,
       password: hashedPassword,
+<<<<<<< HEAD
+      ...(academy && { academy }),
+=======
+>>>>>>> 623a52a1c719b555a9acecfb5d31268b08cc7ed5
     });
 
     await newCoach.save();
@@ -89,15 +111,22 @@ export const loginCoach = async (req, res) => {
 
     const { email, password } = req.body;
 
+<<<<<<< HEAD
+    const coach = await coachModel.findOne({ email });
+=======
     // FIX: Changed variable name to lowercase 'coach' 
     // to avoid conflict with the Model name 'Coach'
     const coach = await Coach.findOne({ email }); 
     
+>>>>>>> 623a52a1c719b555a9acecfb5d31268b08cc7ed5
     if (!coach) {
       return res.status(400).json({ message: "Invalid email or password" });
     }
 
+<<<<<<< HEAD
+=======
     // Use the lowercase 'coach' instance for methods
+>>>>>>> 623a52a1c719b555a9acecfb5d31268b08cc7ed5
     const isMatch = await coach.comparePassword(password);
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid email or password" });
@@ -112,6 +141,21 @@ export const loginCoach = async (req, res) => {
     });
 
     res.status(200).json({
+<<<<<<< HEAD
+      success: true,
+      token,
+      user: {
+        id: coach._id,
+        name: coach.name,
+        email: coach.email,
+        academy: coach.academy,
+      },
+      type: "Coach",
+      message: "Login successful",
+    });
+  } catch (error) {
+    console.log(error);
+=======
       token,
       user: { id: coach._id, name: coach.name, role: "coach" }, // Added role for your frontend redirection
       message: "Login successful",
@@ -144,10 +188,14 @@ export const verifyOtp = async (req, res) => {
       .status(200)
       .json({ result: true, message: "OTP verified successfully" });
   } catch (error) {
+>>>>>>> 623a52a1c719b555a9acecfb5d31268b08cc7ed5
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
+<<<<<<< HEAD
+
+=======
 export const resendOtp = async (req, res) => {
   try {
     const { email } = req.body;
@@ -234,6 +282,7 @@ export const resendOtp = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+>>>>>>> 623a52a1c719b555a9acecfb5d31268b08cc7ed5
 
 export const resetPassword = async (req, res) => {
   try {

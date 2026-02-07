@@ -1,4 +1,30 @@
 import { validationResult } from "express-validator";
+<<<<<<< HEAD
+
+import Athlete from "../models/athlete.model.js";
+
+export const register = async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { email, name, password, sport } = req.body;
+    console.log(req.body);
+
+    const existingUser = await Athlete.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: "Email already in use" });
+    }
+
+    const hashedPassword = await Athlete.hashPassword(password);
+    const newAthlete = new Athlete({
+      name,
+      email,
+      password: hashedPassword,
+      ...(sport && { sport }),
+=======
 import athleteModel from "../models/athlete.model.js";
 import generateOtp  from "../utils/OTPGenerator.js";
 import transporter  from "../config/transporter.js";
@@ -62,11 +88,16 @@ export const verifyOtpAndCompleteRegistration = async (req, res) => {
       name,
       email,
       password: hashedPassword,
+>>>>>>> 623a52a1c719b555a9acecfb5d31268b08cc7ed5
     });
 
     await newAthlete.save();
 
     const token = newAthlete.generateAuthToken();
+<<<<<<< HEAD
+
+=======
+>>>>>>> 623a52a1c719b555a9acecfb5d31268b08cc7ed5
     res.cookie("token", token, {
       httpOnly: true,
       secure: true,
@@ -78,10 +109,57 @@ export const verifyOtpAndCompleteRegistration = async (req, res) => {
       message: "Athlete registered successfully",
     });
   } catch (error) {
+<<<<<<< HEAD
+    console.log(error);
+=======
+>>>>>>> 623a52a1c719b555a9acecfb5d31268b08cc7ed5
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
+<<<<<<< HEAD
+export const loginAthlete = async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { email, password } = req.body;
+
+    const athlete = await Athlete.findOne({ email });
+    if (!athlete) {
+      return res.status(400).json({ message: "Invalid email or password" });
+    }
+
+    const isMatch = await athlete.comparePassword(password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Invalid email or password" });
+    }
+
+    const token = athlete.generateAuthToken();
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "Strict",
+    });
+
+    res.status(200).json({
+      success: true,
+      token,
+      user: {
+        id: athlete._id,
+        name: athlete.name,
+        email: athlete.email,
+        sport: athlete.sport,
+      },
+      type: "Athlete",
+      message: "Login successful",
+    });
+  } catch (error) {
+    console.log(error);
+=======
 import Athlete from "../models/athlete.model.js"; // Ensure this matches your file path
 
 export const loginAthlete = async (req, res) => {
@@ -230,6 +308,7 @@ export const resendOtp = async (req, res) => {
 
     res.status(200).json({ message: "OTP resent to email for verification" });
   } catch (error) {
+>>>>>>> 623a52a1c719b555a9acecfb5d31268b08cc7ed5
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
@@ -237,12 +316,20 @@ export const resendOtp = async (req, res) => {
 export const resetPassword = async (req, res) => {
   try {
     const { email, newPassword } = req.body;
+<<<<<<< HEAD
+    const Athlete = await Athlete.findOne({ email });
+=======
     const Athlete = await athleteModel.findOne({ email });
+>>>>>>> 623a52a1c719b555a9acecfb5d31268b08cc7ed5
     if (!Athlete) {
       return res.status(400).json({ message: "Athlete not found" });
     }
 
+<<<<<<< HEAD
+    const hashedPassword = await Athlete.hashPassword(newPassword);
+=======
     const hashedPassword = await athleteModel.hashPassword(newPassword);
+>>>>>>> 623a52a1c719b555a9acecfb5d31268b08cc7ed5
     Athlete.password = hashedPassword;
     await Athlete.save();
 
@@ -251,3 +338,43 @@ export const resetPassword = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+<<<<<<< HEAD
+
+export const updateAthlete = async (req, res) => {
+  try {
+    const { athleteId } = req.params;
+
+    const forbiddenFields = ["history", "password"];
+
+    const updateData = { ...req.body };
+
+    forbiddenFields.forEach((field) => delete updateData[field]);
+
+    const updatedAthlete = await Athlete.findByIdAndUpdate(
+      athleteId,
+      updateData,
+      {
+        new: true,
+        runValidators: true,
+      },
+    );
+
+    if (!updatedAthlete) {
+      return res.status(404).json({
+        message: "Athlete not found",
+      });
+    }
+
+    res.status(200).json({
+      message: "Athlete updated successfully",
+      data: updatedAthlete,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Server error",
+      error: error.message,
+    });
+  }
+};
+=======
+>>>>>>> 623a52a1c719b555a9acecfb5d31268b08cc7ed5
