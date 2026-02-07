@@ -4,6 +4,7 @@ import generateOtp  from "../utils/OTPGenerator.js";
 import transporter  from "../config/transporter.js";
 import otpStore from "../utils/OTPStore.js";
 import jwt from "jsonwebtoken";
+import Coach from "../models/coach.model.js";
 
 export const sendotp = async (req, res) => {
   try {
@@ -81,41 +82,41 @@ export const verifyOtpAndCompleteRegistration = async (req, res) => {
   }
 };
 
+import Athlete from "../models/athlete.model.js"; // Ensure this matches your file path
+
 export const loginAthlete = async (req, res) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-
     const { email, password } = req.body;
 
-    const Athlete = await athleteModel.findOne({ email });
-    if (!Athlete) {
-      return res.status(400).json({ message: "Invalid email or password" });
+    // 1. Search using the exported Model name 'Athlete'
+    // Also use .select("+password") if you set select: false in your schema
+    const athlete = await Athlete.findOne({ email });
+
+    // 2. Check if athlete exists
+    if (!athlete) {
+      return res.status(404).json({ message: "Athlete not found with this email" });
     }
 
-    const isMatch = await Athlete.comparePassword(password);
+    // 3. Compare Password
+    const isMatch = await athlete.comparePassword(password);
     if (!isMatch) {
-      return res.status(400).json({ message: "Invalid email or password" });
+      return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    const token = Athlete.generateAuthToken();
+    // 4. Generate Token
+    const token = athlete.generateAuthToken();
 
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "Strict",
-    });
-
+    // 5. Success Response
     res.status(200).json({
       token,
-      email: Athlete.email,
-      type: "Athlete",
-      message: "Login successful",
+      user: { 
+        id: athlete._id, 
+        name: athlete.name, 
+        role: "athlete" // Hardcoded role for redirection logic
+      }
     });
   } catch (error) {
-    res.status(500).json({ message: "Server error", error: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 

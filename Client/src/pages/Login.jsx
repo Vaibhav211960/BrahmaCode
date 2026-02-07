@@ -6,6 +6,8 @@ import "./style.css";
 
 const Login = () => {
   const navigate = useNavigate();
+  // State for Role Selection
+  const [role, setRole] = useState("athlete");
 
   const [athleteData, setAthleteData] = useState({
     email: "",
@@ -16,23 +18,37 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const res = await axios.post(
-        "http://localhost:3000/api/athlete/login",
-        {
-          email: athleteData.email,
-          password: athleteData.password,
-        }
-      );
+      // Logic: Switch endpoint based on the selected role
+      const endpoint = role === "coach" 
+        ? "http://localhost:3000/api/coaches/login" 
+        : "http://localhost:3000/api/athlete/login";
 
-      console.log("Login success:", res.data);
+      const res = await axios.post(endpoint, {
+        email: athleteData.email,
+        password: athleteData.password,
+      });
 
-      // Example: store token if backend sends it
-      if (res.data.token) {
-        localStorage.setItem("token", res.data.token);
+      console.log(`${role} login success:`, res.data);
+
+      const { token, user } = res.data;
+
+      if (token) {
+        localStorage.setItem("token", token);
       }
 
-      alert("Login successful! Redirecting to dashboard...");
-      navigate("/athlete-dashboard");
+      // If backend doesn't send role in user object, we use our state
+      const userRole = user?.role || role;
+      localStorage.setItem("role", userRole);
+
+      alert("Login successful! Redirecting...");
+
+      // Redirection logic based on the role
+      if (userRole === "coach") {
+        navigate("/coach-dashboard");
+      } else {
+        navigate("/athlete-dashboard");
+      }
+
     } catch (error) {
       console.error("Login failed:", error.response?.data || error.message);
       alert(error.response?.data?.message || "Login failed");
@@ -50,6 +66,24 @@ const Login = () => {
           </div>
           <h2>Welcome Back</h2>
           <p style={{ color: "#64748b" }}>Access your performance dashboard</p>
+        </div>
+
+        {/* Added Role Selector to match Register page style */}
+        <div className="role-selector" style={{ marginBottom: '20px' }}>
+          <button
+            type="button"
+            className={`role-btn ${role === "athlete" ? "active" : ""}`}
+            onClick={() => setRole("athlete")}
+          >
+            Athlete
+          </button>
+          <button
+            type="button"
+            className={`role-btn ${role === "coach" ? "active" : ""}`}
+            onClick={() => setRole("coach")}
+          >
+            Coach
+          </button>
         </div>
 
         <form onSubmit={handleLogin}>
@@ -80,7 +114,7 @@ const Login = () => {
               />
             </div>
 
-            {/* UI kept as-is, value ignored */}
+            {/* Keeping UI untouched as requested */}
             <div className="form-group">
               <label>Confirm Password</label>
               <input
@@ -96,7 +130,7 @@ const Login = () => {
           </Link>
 
           <button type="submit" className="submit-btn">
-            Login to Dashboard
+            Login as {role.charAt(0).toUpperCase() + role.slice(1)}
           </button>
         </form>
 
