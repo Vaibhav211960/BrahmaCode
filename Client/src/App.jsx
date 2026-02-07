@@ -29,14 +29,12 @@ function App() {
         <Route path='/about' element={<About />} />
         <Route path='/contact' element={<Contact />} />
         
-        {/* Auth Routes */}
         <Route path='/login' element={<Login />} />
         <Route path='/register' element={<Register />} />
         <Route path='/forgot-password' element={<ForgotPassword />} />
         <Route path='/otp-verification' element={<OtpVerification />} />
         <Route path='/reset-password' element={<ResetPassword />} />
 
-        {/* Dashboard Routes */}
         <Route path='/coach-dashboard' element={<CoachDashboard />} />
 
         <Route path='/athlete-dashboard' element={<AthleteDashboard />} />
