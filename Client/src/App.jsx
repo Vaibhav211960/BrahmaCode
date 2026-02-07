@@ -16,6 +16,7 @@ import RunningMockTest from './pages/RunningMockTest'
 import LongJumpMockTest from './pages/LongJumpMockTest'
 import JavelinMockTest from './pages/JavelinMockTest'
 import RelayMockTest from './pages/RelayMockTest'
+import CoachRecipientPage from './pages/CoachRecipientPage'
 
 function App() {
 
@@ -44,6 +45,7 @@ function App() {
         <Route path='/LongJumpMockTest' element={<LongJumpMockTest/>}/>
         <Route path='/JavelinMockTest' element={<JavelinMockTest/>}/>
         <Route path='/RelayMockTest' element={<RelayMockTest/>}/>
+        <Route path='/CoachRecipientPage' element={<CoachRecipientPage/>}/>
       </Routes>
     </>
   )

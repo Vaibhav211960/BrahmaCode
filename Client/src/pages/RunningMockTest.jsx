@@ -279,7 +279,7 @@ const RunningMockTest = () => {
               </div>
             </div>
           </div>
-
+          
           {/* Right Column - Results & Analysis */}
           <div className="space-y-6">
             {/* Score Card */}
