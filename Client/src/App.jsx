@@ -11,6 +11,7 @@ import OtpVerification from "./pages/OtpVerification"
 import ResetPassword from "./pages/ResetPassword"
 import CoachDashboard from './pages/CoachDashboard';
 import AthleteDashboard from './pages/AthleteDashboard'
+import YoloTestForm from './pages/YoloTestForm'
 
 function App() {
 
@@ -34,6 +35,7 @@ function App() {
         <Route path='/coach-dashboard' element={<CoachDashboard />} />
 
         <Route path='/athlete-dashboard' element={<AthleteDashboard />} />
+        <Route path='/YoloTestForm' element={<YoloTestForm/>}/>
       </Routes>
     </>
   )
