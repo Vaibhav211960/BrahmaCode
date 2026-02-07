@@ -7,21 +7,23 @@ import {
   Target, 
   Activity,
   User, 
-  Eye,  
-  Footprints, 
-  Navigation,
-  Smile, 
   Award, 
-  BarChart
+  BarChart,
+  Zap,
+  Navigation,
+  Layers,
+  TargetIcon,
+  Wind,
+  Footprints
 } from 'lucide-react';
 
-const RunningMockTest = () => {
+const LongJumpMockTest = () => {
   const [techniqueChecks, setTechniqueChecks] = useState({
-    headPosition: '',
-    armSwing: '',
-    footSound: '',
-    runningLine: '',
-    faceExpression: ''
+    approachRun: '',
+    takeoff: '',
+    flightPosition: '',
+    landing: '',
+    bodyControl: ''
   });
 
   const handleTechniqueChange = (check, value) => {
@@ -37,45 +39,46 @@ const RunningMockTest = () => {
     return totalAnswered > 0 ? Math.round((correctCount / totalAnswered) * 100) : 0;
   };
 
-  const runningChecksList = [
+  const longJumpChecksList = [
     { 
-      id: 'headPosition', 
-      correct: 'Straight', 
-      incorrect: 'Tilting/shaking', 
-      label: 'Head Position',
-      icon: <Eye className="w-5 h-5 text-blue-600" />,
-      details: 'Neutral spine alignment, eyes forward'
+      id: 'approachRun', 
+      correct: 'Consistent stride pattern', 
+      incorrect: 'Stride variations', 
+      label: 'Approach Run',
+      icon: <Zap className="w-5 h-5 text-blue-600" />,
+      details: 'Maintain consistent rhythm and speed buildup'
     },
     { 
-      id: 'armSwing', 
-      correct: 'Front–back motion', 
-      incorrect: 'Crossing chest', 
-      label: 'Arm Swing',
-      details: '90° elbow bend, relaxed hands'
+      id: 'takeoff', 
+      correct: 'Powerful drive', 
+      incorrect: 'Weak/poor angle', 
+      label: 'Takeoff Phase',
+      icon: <TargetIcon className="w-5 h-5 text-green-600" />,
+      details: 'Explosive push from takeoff board, optimal angle'
     },
     { 
-      id: 'footSound', 
-      correct: 'Soft landing', 
-      incorrect: 'Loud stamping', 
-      label: 'Foot Landing',
-      icon: <Footprints className="w-5 h-5 text-amber-600" />,
-      details: 'Mid-foot strike, quiet impact'
+      id: 'flightPosition', 
+      correct: 'Hang/straddle position', 
+      incorrect: 'Poor body position', 
+      label: 'Flight Position',
+      icon: <Wind className="w-5 h-5 text-amber-600" />,
+      details: 'Maintain proper body alignment in air'
     },
     { 
-      id: 'runningLine', 
-      correct: 'Straight line', 
-      incorrect: 'Zig-zag pattern', 
-      label: 'Running Line',
-      icon: <Navigation className="w-5 h-5 text-purple-600" />,
-      details: 'Forward direction, no lateral movement'
+      id: 'landing', 
+      correct: 'Feet forward, hands back', 
+      incorrect: 'Sitting back early', 
+      label: 'Landing Technique',
+      icon: <Footprints className="w-5 h-5 text-purple-600" />,
+      details: 'Feet extended forward, arms sweep back'
     },
     { 
-      id: 'faceExpression', 
-      correct: 'Relaxed face', 
-      incorrect: 'Pain/grimace', 
-      label: 'Face Expression',
-      icon: <Smile className="w-5 h-5 text-pink-600" />,
-      details: 'Indicates comfort and breathing pattern'
+      id: 'bodyControl', 
+      correct: 'Full body control', 
+      incorrect: 'Lack of control', 
+      label: 'Body Control',
+      icon: <Layers className="w-5 h-5 text-pink-600" />,
+      details: 'Maintain balance and control throughout jump'
     }
   ];
 
@@ -146,38 +149,38 @@ const RunningMockTest = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 md:p-6 font-sans">
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 to-orange-50 p-4 md:p-6 font-sans">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
               <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-blue-700 flex items-center justify-center">
-                  <Activity className="w-6 h-6 text-white" />
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-600 to-amber-600 flex items-center justify-center">
+                  <Navigation className="w-6 h-6 text-white" />
                 </div>
-                Running Form Analysis
+                Long Jump Technique Analysis
               </h1>
-              <p className="text-gray-600 mt-2">Professional assessment tool for running technique evaluation</p>
+              <p className="text-gray-600 mt-2">Professional assessment tool for long jump technique evaluation</p>
             </div>
           </div>
-        </div>  
+        </div>
 
         <div className="grid lg:grid-cols-3 gap-6">
           {/* Left Column - Technique Checklist */}
           <div className="lg:col-span-2">
             <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
-              <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-6">
+              <div className="bg-gradient-to-r from-orange-600 to-amber-600 p-6">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <Target className="w-8 h-8 text-white" />
                     <div>
-                      <h2 className="text-xl font-bold text-white">Running Technique Assessment</h2>
-                      <p className="text-blue-100">Select correct/incorrect for each parameter</p>
+                      <h2 className="text-xl font-bold text-white">Long Jump Technique Assessment</h2>
+                      <p className="text-orange-100">Select correct/incorrect for each phase of the jump</p>
                     </div>
                   </div>
                   <div className="hidden md:block">
-                    <div className="text-white text-sm bg-blue-500/30 backdrop-blur-sm px-4 py-2 rounded-lg">
+                    <div className="text-white text-sm bg-orange-500/30 backdrop-blur-sm px-4 py-2 rounded-lg">
                       {completedCount} of 5 completed
                     </div>
                   </div>
@@ -186,7 +189,7 @@ const RunningMockTest = () => {
 
               <div className="p-6">
                 <div className="space-y-5">
-                  {runningChecksList.map((check) => (
+                  {longJumpChecksList.map((check) => (
                     <div key={check.id} className="p-5 bg-gray-50 rounded-xl border border-gray-200 hover:bg-white transition-colors">
                       <div className="flex items-start justify-between mb-4">
                         <div className="flex items-start gap-4">
@@ -227,7 +230,7 @@ const RunningMockTest = () => {
                             </div>
                             <div>
                               <div className="font-medium">{check.correct}</div>
-                              <div className="text-sm text-gray-500 mt-1">Optimal form</div>
+                              <div className="text-sm text-gray-500 mt-1">Optimal technique</div>
                             </div>
                           </div>
                         </button>
@@ -263,11 +266,11 @@ const RunningMockTest = () => {
                   <button
                     onClick={() => {
                       setTechniqueChecks({
-                        headPosition: '', 
-                        armSwing: '', 
-                        footSound: '', 
-                        runningLine: '', 
-                        faceExpression: ''
+                        approachRun: '', 
+                        takeoff: '', 
+                        flightPosition: '', 
+                        landing: '', 
+                        bodyControl: ''
                       });
                     }}
                     className="px-6 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-colors font-medium flex items-center gap-2"
@@ -285,7 +288,7 @@ const RunningMockTest = () => {
             {/* Score Card */}
             <div className={`rounded-2xl border ${getScoreBg(techniqueScore)} p-6 shadow-lg`}>
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-bold text-gray-900">Assessment Score</h3>
+                <h3 className="text-lg font-bold text-gray-900">Technique Score</h3>
                 <Award className="w-6 h-6 text-amber-500" />
               </div>
               
@@ -298,15 +301,15 @@ const RunningMockTest = () => {
 
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-700">Correct Forms</span>
+                  <span className="text-gray-700">Correct Techniques</span>
                   <span className="font-bold text-emerald-600">{correctCount}/5</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-700">Incorrect Forms</span>
+                  <span className="text-gray-700">Needs Work</span>
                   <span className="font-bold text-red-600">{completedCount - correctCount}/5</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-700">Completion</span>
+                  <span className="text-gray-700">Assessment Completion</span>
                   <span className="font-bold text-blue-600">{Math.round((completedCount / 5) * 100)}%</span>
                 </div>
               </div>
@@ -327,28 +330,57 @@ const RunningMockTest = () => {
               </div>
             </div>
 
-            {/* Pain Alert */}
-            {techniqueChecks.faceExpression === 'incorrect' && (
+            {/* Safety Alert */}
+            {techniqueChecks.takeoff === 'incorrect' && (
               <div className="bg-gradient-to-r from-red-50 to-red-100 border-2 border-red-200 rounded-2xl p-6 shadow-lg">
                 <div className="flex items-start gap-3">
                   <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
                     <AlertTriangle className="w-5 h-5 text-red-600" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-red-800 mb-2">⚠️ Pain Indication Detected</h3>
-                    <p className="text-red-700 text-sm">Athlete is showing facial expressions indicating discomfort or pain.</p>
+                    <h3 className="font-bold text-red-800 mb-2">⚠️ Takeoff Technique Issue</h3>
+                    <p className="text-red-700 text-sm">Poor takeoff technique detected - risk of underperformance or injury.</p>
                     <div className="mt-3 text-red-600 text-sm space-y-1">
                       <div className="flex items-center gap-2">
                         <div className="w-2 h-2 rounded-full bg-red-400"></div>
-                        <span>Consider reducing intensity</span>
+                        <span>Focus on takeoff board precision</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <div className="w-2 h-2 rounded-full bg-red-400"></div>
-                        <span>Check for potential injuries</span>
+                        <span>Improve explosive power training</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <div className="w-2 h-2 rounded-full bg-red-400"></div>
-                        <span>Consult with medical staff</span>
+                        <span>Practice proper takeoff angle</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Landing Alert */}
+            {techniqueChecks.landing === 'incorrect' && (
+              <div className="bg-gradient-to-r from-orange-50 to-amber-50 border-2 border-orange-200 rounded-2xl p-6 shadow-lg">
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center flex-shrink-0">
+                    <AlertTriangle className="w-5 h-5 text-orange-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-orange-800 mb-2">⚠️ Landing Technique Issue</h3>
+                    <p className="text-orange-700 text-sm">Poor landing form detected - can affect distance and cause injury.</p>
+                    <div className="mt-3 text-orange-600 text-sm space-y-1">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-orange-400"></div>
+                        <span>Practice feet forward extension</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-orange-400"></div>
+                        <span>Work on arm sweep technique</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-orange-400"></div>
+                        <span>Avoid sitting back early</span>
                       </div>
                     </div>
                   </div>
@@ -372,14 +404,14 @@ const RunningMockTest = () => {
 
             {/* Quick Stats */}
             <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-lg">
-              <h3 className="font-bold text-gray-900 mb-4">Quick Statistics</h3>
+              <h3 className="font-bold text-gray-900 mb-4">Jump Analysis Stats</h3>
               <div className="grid grid-cols-2 gap-4">
                 <div className="p-4 bg-emerald-50 rounded-xl">
-                  <div className="text-sm text-emerald-700 mb-1">Correct Forms</div>
+                  <div className="text-sm text-emerald-700 mb-1">Correct Techniques</div>
                   <div className="text-2xl font-bold text-emerald-800">{correctCount}</div>
                 </div>
                 <div className="p-4 bg-red-50 rounded-xl">
-                  <div className="text-sm text-red-700 mb-1">Needs Work</div>
+                  <div className="text-sm text-red-700 mb-1">Needs Correction</div>
                   <div className="text-2xl font-bold text-red-800">{completedCount - correctCount}</div>
                 </div>
                 <div className="p-4 bg-blue-50 rounded-xl">
@@ -387,7 +419,7 @@ const RunningMockTest = () => {
                   <div className="text-2xl font-bold text-blue-800">{Math.round((completedCount / 5) * 100)}%</div>
                 </div>
                 <div className="p-4 bg-amber-50 rounded-xl">
-                  <div className="text-sm text-amber-700 mb-1">Rating</div>
+                  <div className="text-sm text-amber-700 mb-1">Performance Grade</div>
                   <div className="text-2xl font-bold text-amber-800">
                     {techniqueScore >= 80 ? 'A' :
                      techniqueScore >= 60 ? 'B' :
@@ -396,12 +428,34 @@ const RunningMockTest = () => {
                 </div>
               </div>
             </div>
+
+            {/* Long Jump Phases Info */}
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-6 shadow-lg">
+              <h3 className="font-bold text-gray-900 mb-4">Long Jump Phases</h3>
+              <div className="space-y-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                  <span className="text-sm text-gray-700">1. Approach Run</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                  <span className="text-sm text-gray-700">2. Takeoff</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-2 h-2 rounded-full bg-amber-500"></div>
+                  <span className="text-sm text-gray-700">3. Flight</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-2 h-2 rounded-full bg-purple-500"></div>
+                  <span className="text-sm text-gray-700">4. Landing</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-
       </div>
     </div>
   );
 };
 
-export default RunningMockTest;
+export default LongJumpMockTest;

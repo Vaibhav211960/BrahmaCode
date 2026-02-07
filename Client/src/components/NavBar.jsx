@@ -19,7 +19,7 @@ const NavBar = () => {
             YoloTest
         </NavLink>
         <NavLink to="/RunningMockTest">
-            Mock
+            TechnicalTest
         </NavLink>
         <NavLink to='/about'>
             About
