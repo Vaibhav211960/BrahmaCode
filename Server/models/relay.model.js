@@ -1,42 +1,29 @@
 import mongoose from "mongoose";
 
-const techniqueMetricSchema = new mongoose.Schema(
-  {
-    value: {
-      type: mongoose.Schema.Types.Mixed,
-      required: true,
-    },
-    status: {
-      type: String,
-      enum: ["Correct", "Incorrect"],
-      required: true,
-    },
-    note: {
-      type: String,
-      default: "",
-    },
-  },
-  { _id: false }
-);
-
-const accelerationExchangeTestSchema = new mongoose.Schema(
+const relayTestSchema = new mongoose.Schema(
   {
     athleteId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Athlete",
       required: true,
     },
-
-    accelerationDistance: techniqueMetricSchema, 
-    batonExchange: techniqueMetricSchema,         
-    armAngle: techniqueMetricSchema,               
-    verbalCueTiming: techniqueMetricSchema,        
-    legMuscleTightness: techniqueMetricSchema,     
+    // Matches Frontend techniqueChecks exactly
+    accelerationDistance: { type: String, required: true },
+    armAngle: { type: String, required: true },
+    batonExchange: { type: String, required: true },
+    verbalCueTiming: { type: String, required: true },
+    legMuscleTightness: { type: String, required: true },
+    
+    // Aggregated Metrics for Dashboard
+    totalScore: { type: Number, default: 0 },
+    riskLevel: { type: String, enum: ["Low", "Medium", "High"], default: "Low" },
+    grade: { type: String, enum: ["Excellent", "Good", "Average", "Poor"], default: "Average" },
+    
+    notes: { type: String, default: "" }
   },
   { timestamps: true }
 );
 
-export default mongoose.model(
-  "Relay",
-  accelerationExchangeTestSchema
-);
+// Unified Model Name
+const Relay = mongoose.model("Relay", relayTestSchema);
+export default Relay;

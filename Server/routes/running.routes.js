@@ -8,9 +8,12 @@ import {
 
 const router = express.Router();
 
-router.post("/running/create", createRunningTest);
+// Matches frontend: axios.post(".../api/athlete/running-test")
+router.post("/create", createRunningTest); 
+
+// Athlete-specific data retrieval
 router.get("/running-test/weakness/:athleteId", getRunningWeakness);
 router.get("/running-test/injury-risk/:athleteId", getRunningInjuryRisk);
-router.get("/get/:athleteId", getRunningScore);
+router.get("/running-test/score/:athleteId", getRunningScore);
 
 export default router;

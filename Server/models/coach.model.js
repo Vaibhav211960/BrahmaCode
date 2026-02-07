@@ -1,52 +1,14 @@
 import mongoose from "mongoose";
 <<<<<<< HEAD
-=======
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
->>>>>>> 623a52a1c719b555a9acecfb5d31268b08cc7ed5
+=======
+>>>>>>> 4085d9d21c0de8746ad4548fe4fc682ed816d859
 
 const coachModel = mongoose.Schema(
   {
     name: {
 <<<<<<< HEAD
-      type: "String",
-      required: true,
-    },
-    email: {
-      type: "String",
-      requried: true,
-    },
-    password: {
-      type: "String",
-      required: true,
-    },
-    category: {
-        type: "String",
-        required: true
-    },
-    level: {
-        type: "String",
-        required: true
-    },
-    disciples: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Athlete"
-    }],
-    yearOfExp: {
-        type: "Number"
-    },
-    education: {
-        type: "String"
-    },
-    coachInstitute: {
-        type: "String"
-    }
-  },
-  { timestamps: true },
-);
-
-
-=======
       type: String, // Use String constructor for cleaner code
       required: true,
     },
@@ -89,7 +51,45 @@ const coachModel = mongoose.Schema(
 );
 
 // Pre-save validation remains the same
->>>>>>> 623a52a1c719b555a9acecfb5d31268b08cc7ed5
+=======
+      type: "String",
+      required: true,
+    },
+    email: {
+      type: "String",
+      requried: true,
+    },
+    password: {
+      type: "String",
+      required: true,
+    },
+    category: {
+        type: "String",
+        required: true
+    },
+    level: {
+        type: "String",
+        required: true
+    },
+    disciples: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Athlete"
+    }],
+    yearOfExp: {
+        type: "Number"
+    },
+    education: {
+        type: "String"
+    },
+    coachInstitute: {
+        type: "String"
+    }
+  },
+  { timestamps: true },
+);
+
+
+>>>>>>> 4085d9d21c0de8746ad4548fe4fc682ed816d859
 coachModel.pre("validate", function (next) {
   if (
     this.isNew &&
@@ -111,17 +111,17 @@ coachModel.pre("validate", function (next) {
 });
 
 <<<<<<< HEAD
-coachModel.methods.generateAuthToken = function () {
-  const token = jwt.sign(
-    { _id: this._id, email: this.email },
-    process.env.JWT_SECRET,
-=======
 // Logic for Login and Register flows
 coachModel.methods.generateAuthToken = function () {
   const token = jwt.sign(
     { _id: this._id, email: this.email, role: this.role }, // Added role to token payload
     process.env.JWT_SECRET || 'fallback_secret', // Always have a fallback for hackathons
->>>>>>> 623a52a1c719b555a9acecfb5d31268b08cc7ed5
+=======
+coachModel.methods.generateAuthToken = function () {
+  const token = jwt.sign(
+    { _id: this._id, email: this.email },
+    process.env.JWT_SECRET,
+>>>>>>> 4085d9d21c0de8746ad4548fe4fc682ed816d859
     { expiresIn: "3d" }
   );
   return token;
@@ -137,8 +137,4 @@ coachModel.methods.comparePassword = async function (password) {
 };
 
 const Coach = mongoose.model("Coach", coachModel);
-<<<<<<< HEAD
 export default Coach;
-=======
-export default Coach;
->>>>>>> 623a52a1c719b555a9acecfb5d31268b08cc7ed5

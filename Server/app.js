@@ -43,13 +43,20 @@ app.use(passport.session())
 
 import AthleteRoutes from "./routes/athlete.routes.js"
 import CoachRoutes from "./routes/coach.routes.js"
+import RunningRoutes from "./routes/running.routes.js"
+import LongJumpRoutes from "./routes/longJump.routes.js"
+import JevelineRoutes from "./routes/jeveline.routes.js"
+import RelayRoutes from "./routes/relay.routes.js"
 
-<<<<<<< HEAD
-app.use("/athletes", AthleteRoutes)
-app.use("/coaches", CoachRoutes)
-=======
+
 app.use("/api/athlete", AthleteRoutes)
 app.use("/api/coaches", CoachRoutes)
->>>>>>> 623a52a1c719b555a9acecfb5d31268b08cc7ed5
+<<<<<<< HEAD
+=======
+app.use("/api/running", RunningRoutes)
+app.use("/api/long-jump", LongJumpRoutes)
+app.use("/api/javelin", JevelineRoutes);
+app.use("/api/relay", RelayRoutes)
+>>>>>>> 4085d9d21c0de8746ad4548fe4fc682ed816d859
 
 export default app;

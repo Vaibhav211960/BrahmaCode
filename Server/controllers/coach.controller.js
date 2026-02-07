@@ -1,55 +1,43 @@
 import { validationResult } from "express-validator";
 <<<<<<< HEAD
-import coachModel from "../models/coach.model.js";
-
-export const register = async (req, res) => {
-  try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-
-    const { email, name, password, academy } = req.body;
-    const existingUser = await coachModel.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: "Email already in use" });
-    }
-
-=======
 import Coach from "../models/coach.model.js";
 import generateOtp from "../utils/OTPGenerator.js";
 import transporter from "../config/transporter.js";
 import otpStore from "../utils/OTPStore.js";
+import Athlete from "../models/athlete.model.js";
+import { sendInvitation } from "../services/invitaionService.js";
 
 export const sendotp = async (req, res) => {
   try {
-        const { name, email, password, category, level, coachInstitute } = req.body;
+    const { name, email, password, category, level, coachInstitute } = req.body;
 
-        // 1. Check if coach already exists
-        const existingCoach = await Coach.findOne({ email });
-        if (existingCoach) return res.status(400).json({ message: "Coach already exists" });
+    // 1. Check if coach already exists
+    const existingCoach = await Coach.findOne({ email });
+    if (existingCoach)
+      return res.status(400).json({ message: "Coach already exists" });
 
-        // 2. Hash Password (using the static method from your model)
-        const hashedPassword = await Coach.hashPassword(password);
+    // 2. Hash Password (using the static method from your model)
+    const hashedPassword = await Coach.hashPassword(password);
 
-        // 3. Create Coach
-        const newCoach = await Coach.create({
-            name,
-            email,
-            password: hashedPassword,
-            category,
-            level,
-            coachInstitute
-        });
+    // 3. Create Coach
+    const newCoach = await Coach.create({
+      name,
+      email,
+      password: hashedPassword,
+      category,
+      level,
+      coachInstitute,
+    });
 
-        // 4. Generate Token
-        const token = newCoach.generateAuthToken();
+    const token = newCoach.generateAuthToken();
 
-        res.status(201).json({ token, coach: { id: newCoach._id, name: newCoach.name } });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    } 
-}
+    res
+      .status(201)
+      .json({ token, coach: { id: newCoach._id, name: newCoach.name } });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 export const verifyOtpAndCompleteRegistration = async (req, res) => {
   try {
@@ -72,16 +60,32 @@ export const verifyOtpAndCompleteRegistration = async (req, res) => {
 
     otpStore.delete(email);
 
->>>>>>> 623a52a1c719b555a9acecfb5d31268b08cc7ed5
+=======
+import coachModel from "../models/coach.model.js";
+
+export const register = async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { email, name, password, academy } = req.body;
+    const existingUser = await coachModel.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: "Email already in use" });
+    }
+
+>>>>>>> 4085d9d21c0de8746ad4548fe4fc682ed816d859
     const hashedPassword = await coachModel.hashPassword(password);
     const newCoach = new coachModel({
       name,
       email,
       password: hashedPassword,
 <<<<<<< HEAD
-      ...(academy && { academy }),
 =======
->>>>>>> 623a52a1c719b555a9acecfb5d31268b08cc7ed5
+      ...(academy && { academy }),
+>>>>>>> 4085d9d21c0de8746ad4548fe4fc682ed816d859
     });
 
     await newCoach.save();
@@ -112,21 +116,21 @@ export const loginCoach = async (req, res) => {
     const { email, password } = req.body;
 
 <<<<<<< HEAD
-    const coach = await coachModel.findOne({ email });
-=======
-    // FIX: Changed variable name to lowercase 'coach' 
+    // FIX: Changed variable name to lowercase 'coach'
     // to avoid conflict with the Model name 'Coach'
-    const coach = await Coach.findOne({ email }); 
-    
->>>>>>> 623a52a1c719b555a9acecfb5d31268b08cc7ed5
+    const coach = await Coach.findOne({ email });
+
+=======
+    const coach = await coachModel.findOne({ email });
+>>>>>>> 4085d9d21c0de8746ad4548fe4fc682ed816d859
     if (!coach) {
       return res.status(400).json({ message: "Invalid email or password" });
     }
 
 <<<<<<< HEAD
-=======
     // Use the lowercase 'coach' instance for methods
->>>>>>> 623a52a1c719b555a9acecfb5d31268b08cc7ed5
+=======
+>>>>>>> 4085d9d21c0de8746ad4548fe4fc682ed816d859
     const isMatch = await coach.comparePassword(password);
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid email or password" });
@@ -142,20 +146,6 @@ export const loginCoach = async (req, res) => {
 
     res.status(200).json({
 <<<<<<< HEAD
-      success: true,
-      token,
-      user: {
-        id: coach._id,
-        name: coach.name,
-        email: coach.email,
-        academy: coach.academy,
-      },
-      type: "Coach",
-      message: "Login successful",
-    });
-  } catch (error) {
-    console.log(error);
-=======
       token,
       user: { id: coach._id, name: coach.name, role: "coach" }, // Added role for your frontend redirection
       message: "Login successful",
@@ -188,14 +178,26 @@ export const verifyOtp = async (req, res) => {
       .status(200)
       .json({ result: true, message: "OTP verified successfully" });
   } catch (error) {
->>>>>>> 623a52a1c719b555a9acecfb5d31268b08cc7ed5
+=======
+      success: true,
+      token,
+      user: {
+        id: coach._id,
+        name: coach.name,
+        email: coach.email,
+        academy: coach.academy,
+      },
+      type: "Coach",
+      message: "Login successful",
+    });
+  } catch (error) {
+    console.log(error);
+>>>>>>> 4085d9d21c0de8746ad4548fe4fc682ed816d859
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
 <<<<<<< HEAD
-
-=======
 export const resendOtp = async (req, res) => {
   try {
     const { email } = req.body;
@@ -282,7 +284,8 @@ export const resendOtp = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
->>>>>>> 623a52a1c719b555a9acecfb5d31268b08cc7ed5
+=======
+>>>>>>> 4085d9d21c0de8746ad4548fe4fc682ed816d859
 
 export const resetPassword = async (req, res) => {
   try {
@@ -299,5 +302,60 @@ export const resetPassword = async (req, res) => {
     res.status(200).json({ message: "Password reset successfully" });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+export const sendInvitationToAthlete = async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ message: errors.array()[0].msg });
+    }
+
+    const { email } = req.body;
+    const loggedInUser = await Coach.findOne({ email: req.user.email });
+    const invitedBy = loggedInUser._id.toString();
+
+    const invitation = await sendInvitation(email, invitedBy);
+    return res.status(201).json(invitation);
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ message: error.message });
+  }
+};
+
+export const removeDisciple = async (req, res) => {
+  try {
+    const { coachId, athleteId } = req.body;
+
+    if (!coachId || !athleteId) {
+      return res.status(400).json({
+        message: "coachId and athleteId are required",
+      });
+    }
+
+    const updatedCoach = await Coach.findByIdAndUpdate(
+      coachId,
+      {
+        $pull: { disciples: athleteId },
+      },
+      { new: true },
+    ).populate("disciples");
+
+    if (!updatedCoach) {
+      return res.status(404).json({
+        message: "Coach not found",
+      });
+    }
+
+    res.status(200).json({
+      message: "Disciple removed successfully",
+      data: updatedCoach,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Server error",
+      error: error.message,
+    });
   }
 };

@@ -1,24 +1,5 @@
 import mongoose from "mongoose";
 
-const runningMetricSchema = new mongoose.Schema(
-  {
-    value: {
-      type: mongoose.Schema.Types.Mixed,
-      required: true,
-    },
-    status: {
-      type: String,
-      enum: ["Correct", "Incorrect", "Good", "Poor"],
-      required: true,
-    },
-    note: {
-      type: String,
-      default: "",
-    },
-  },
-  { _id: false }
-);
-
 const runningTestSchema = new mongoose.Schema(
   {
     athleteId: {
@@ -26,26 +7,26 @@ const runningTestSchema = new mongoose.Schema(
       ref: "Athlete",
       required: true,
     },
-
-    headPosition: runningMetricSchema,
-    armSwing: runningMetricSchema, 
-    runningLine: runningMetricSchema, 
-    handPosition: runningMetricSchema, 
-
-    reactionTime: {
-      value: {
-        type: Number,
-        required: true,
-      },
-      status: {
-        type: String,
-        enum: ["Excellent", "Good", "Poor"],
-        required: true,
-      },
+    // Simplified: Store the "Correct/Incorrect" value directly as a string
+    headPosition: { type: String, required: true },
+    armSwing: { type: String, required: true },
+    runningLine: { type: String, required: true },
+    footSound: { type: String, required: true },
+    faceExpression: { type: String, required: true },
+    
+    // Aggregated data for easier dashboard access
+    totalScore: {
+      type: Number,
+      default: 0
     },
+    date: {
+      type: Date,
+      default: Date.now
+    }
   },
   { timestamps: true }
 );
 
-
-export default mongoose.model("Running", runningTestSchema);
+// Standardize model name to match your controller imports
+const RunningTest = mongoose.model("RunningTest", runningTestSchema);
+export default RunningTest;
