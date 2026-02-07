@@ -51,12 +51,9 @@ import RelayRoutes from "./routes/relay.routes.js"
 
 app.use("/api/athlete", AthleteRoutes)
 app.use("/api/coaches", CoachRoutes)
-<<<<<<< HEAD
-=======
 app.use("/api/running", RunningRoutes)
 app.use("/api/long-jump", LongJumpRoutes)
 app.use("/api/javelin", JevelineRoutes);
 app.use("/api/relay", RelayRoutes)
->>>>>>> 4085d9d21c0de8746ad4548fe4fc682ed816d859
 
 export default app;
