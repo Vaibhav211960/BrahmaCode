@@ -16,6 +16,7 @@ import RunningMockTest from './pages/RunningMockTest'
 import LongJumpMockTest from './pages/LongJumpMockTest'
 import JavelinMockTest from './pages/JavelinMockTest'
 import RelayMockTest from './pages/RelayMockTest'
+import CoachRecipientPage from './pages/CoachRecipientPage'
 
 function App() {
 
@@ -28,14 +29,12 @@ function App() {
         <Route path='/about' element={<About />} />
         <Route path='/contact' element={<Contact />} />
         
-        {/* Auth Routes */}
         <Route path='/login' element={<Login />} />
         <Route path='/register' element={<Register />} />
         <Route path='/forgot-password' element={<ForgotPassword />} />
         <Route path='/otp-verification' element={<OtpVerification />} />
         <Route path='/reset-password' element={<ResetPassword />} />
 
-        {/* Dashboard Routes */}
         <Route path='/coach-dashboard' element={<CoachDashboard />} />
 
         <Route path='/athlete-dashboard' element={<AthleteDashboard />} />
@@ -44,6 +43,7 @@ function App() {
         <Route path='/LongJumpMockTest' element={<LongJumpMockTest/>}/>
         <Route path='/JavelinMockTest' element={<JavelinMockTest/>}/>
         <Route path='/RelayMockTest' element={<RelayMockTest/>}/>
+        <Route path='/CoachRecipientPage' element={<CoachRecipientPage/>}/>
       </Routes>
     </>
   )
