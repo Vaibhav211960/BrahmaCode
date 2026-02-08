@@ -142,9 +142,10 @@ const Register = () => {
                     required
                   >
                     <option value="">Select Sport</option>
-                    <option value="Cricket">Cricket</option>
-                    <option value="Football">Football</option>
-                    <option value="Athletics">Athletics</option>
+                    <option value="Running">Running</option>
+                    <option value="LongJump">Long-Jump</option>
+                    <option value="Realy">Realy</option>
+                    <option value="Javelin">Javelin</option>
                   </select>
                 </div>
               </div>

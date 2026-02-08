@@ -34,7 +34,11 @@ router.post(
 );
 
 router.get("/profile", athleteMiddleware, profile);
+<<<<<<< HEAD
   
+=======
+
+>>>>>>> e97dce4a64e3ea7a358400ac4cd2be284af2b5f8
 // router.put("/profile", athleteMiddleware, updateProfile);
 
 router.get("/all", getAllAthletes);
