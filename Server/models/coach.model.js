@@ -1,10 +1,14 @@
 import mongoose from "mongoose";
+<<<<<<< HEAD
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+=======
+>>>>>>> a96a4ca4eff7cefa461723750f71ce87ffa21b08
 
 const coachModel = mongoose.Schema(
   {
     name: {
+<<<<<<< HEAD
       type: String, // Use String constructor for cleaner code
       required: true,
     },
@@ -47,6 +51,45 @@ const coachModel = mongoose.Schema(
 );
 
 // Pre-save validation remains the same
+=======
+      type: "String",
+      required: true,
+    },
+    email: {
+      type: "String",
+      requried: true,
+    },
+    password: {
+      type: "String",
+      required: true,
+    },
+    category: {
+        type: "String",
+        required: true
+    },
+    level: {
+        type: "String",
+        required: true
+    },
+    disciples: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Athlete"
+    }],
+    yearOfExp: {
+        type: "Number"
+    },
+    education: {
+        type: "String"
+    },
+    coachInstitute: {
+        type: "String"
+    }
+  },
+  { timestamps: true },
+);
+
+
+>>>>>>> a96a4ca4eff7cefa461723750f71ce87ffa21b08
 coachModel.pre("validate", function (next) {
   if (
     this.isNew &&
@@ -67,11 +110,18 @@ coachModel.pre("validate", function (next) {
   next();
 });
 
+<<<<<<< HEAD
 // Logic for Login and Register flows
 coachModel.methods.generateAuthToken = function () {
   const token = jwt.sign(
     { _id: this._id, email: this.email, role: this.role }, // Added role to token payload
     process.env.JWT_SECRET || 'fallback_secret', // Always have a fallback for hackathons
+=======
+coachModel.methods.generateAuthToken = function () {
+  const token = jwt.sign(
+    { _id: this._id, email: this.email },
+    process.env.JWT_SECRET,
+>>>>>>> a96a4ca4eff7cefa461723750f71ce87ffa21b08
     { expiresIn: "3d" }
   );
   return token;
