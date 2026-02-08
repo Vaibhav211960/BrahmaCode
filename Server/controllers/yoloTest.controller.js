@@ -1,6 +1,6 @@
-import Athlete from "../models/athlete.model";
-import Yolo from "../models/yolo.model";
-import { yoloConfig } from "../utils/yonoConfig";
+import Athlete from "../models/athlete.model.js";
+import Yolo from "../models/yolo.model.js";
+import { yoloConfig } from "../utils/yonoConfig.js";
 
 export const createYoloTest = async (req, res) => {
   try {
@@ -73,6 +73,8 @@ export const createYoloTest = async (req, res) => {
       },
     });
 
+    console.log(yoloTest)
+    
     res.status(201).json({
       message: "YOLO test evaluated successfully",
       data: yoloTest,
@@ -85,12 +87,16 @@ export const createYoloTest = async (req, res) => {
   }
 };
 
-const getYoloTests = async (req, res) => {
+export const getYoloTests = async (req, res) => {
   try {
-    const yoloTests = await Yolo.findById(req.params.id);
-    res
-      .status(200)
-      .json({ message: "YOLO tests retrieved successfully", yoloTests });
+    const { athleteId } = req.params;
+    const yoloTests = await Yolo.find({ athleteId }).sort({ createdAt: -1 }).limit(10);
+    
+    if (!yoloTests || yoloTests.length === 0) {
+      return res.status(404).json({ message: "No YOLO tests found for this athlete", data: [] });
+    }
+    
+    res.status(200).json({ message: "YOLO tests retrieved successfully", data: yoloTests });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
@@ -130,7 +136,7 @@ export const compareWithSameSportAthletes = async (req, res) => {
     ]);
 
     const currentAthleteTest = yoloTests.find(
-      (t) => t._id.toString() === athleteId
+      (t) => t._id.toString() === athleteId,
     )?.latestTest;
 
     if (!currentAthleteTest) {
@@ -148,8 +154,7 @@ export const compareWithSameSportAthletes = async (req, res) => {
       const athleteValue = currentAthleteTest[metric]?.value;
       if (athleteValue == null || values.length === 0) return;
 
-      const avg =
-        values.reduce((sum, v) => sum + v, 0) / values.length;
+      const avg = values.reduce((sum, v) => sum + v, 0) / values.length;
 
       const sorted = [...values].sort((a, b) => a - b);
       const rank = reverseMetrics.includes(metric)
@@ -157,7 +162,7 @@ export const compareWithSameSportAthletes = async (req, res) => {
         : sorted.reverse().findIndex((v) => v <= athleteValue) + 1;
 
       const percentile = Math.round(
-        ((values.length - rank) / values.length) * 100
+        ((values.length - rank) / values.length) * 100,
       );
 
       comparison[metric] = {
@@ -171,8 +176,8 @@ export const compareWithSameSportAthletes = async (req, res) => {
           athleteValue > avg
             ? "Above Average"
             : athleteValue < avg
-            ? "Below Average"
-            : "Average",
+              ? "Below Average"
+              : "Average",
       };
     });
 
@@ -189,6 +194,3 @@ export const compareWithSameSportAthletes = async (req, res) => {
     });
   }
 };
-
-
-export { createYoloTest, getYoloTests, getAllYoloTests, compareWithSameSportAthletes };

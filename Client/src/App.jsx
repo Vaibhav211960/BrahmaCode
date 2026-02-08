@@ -12,7 +12,7 @@ import ResetPassword from "./pages/ResetPassword"
 import CoachDashboard from './pages/CoachDashboard';
 import AthleteDashboard from './pages/AthleteDashboard'
 import AthleteProfileView from './pages/AthleteProfileView'
-import YoloTestForm from './pages/YoloTestForm'
+import YoloTestForm from "./pages/YoloTestForm"
 import RunningMockTest from './pages/RunningMockTest'
 import LongJumpMockTest from './pages/LongJumpMockTest'
 import JavelinMockTest from './pages/JavelinMockTest'

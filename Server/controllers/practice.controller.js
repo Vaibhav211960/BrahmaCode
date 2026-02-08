@@ -2,28 +2,22 @@ import Practice from "../models/practice.model.js";
 
 export const createPractice = async (req, res) => {
   try {
-    const { title, athleteId, coachId, activities, note } = req.body;
+    const { title, athleteId, coachId, activityName, duration, note } =
+      req.body;
 
-    if (!title || !athleteId || !coachId) {
+    if (!title || !athleteId || !coachId || !activityName) {
       return res.status(400).json({
         success: false,
-        message: "Title, athleteId, and coachId are required",
+        message: "Title, athleteId, coachId, and activityName are required",
       });
-    }
-
-    let formattedActivities = [];
-    if (Array.isArray(activities)) {
-      formattedActivities = activities.map((activity) => ({
-        activityName: activity.activityName,
-        score: null,
-      }));
     }
 
     const practice = await Practice.create({
       title,
       athleteId,
       coachId,
-      activities: formattedActivities,
+      activityName,
+      duration,
       note,
     });
 
@@ -43,17 +37,25 @@ export const createPractice = async (req, res) => {
 
 export const getPractices = async (req, res) => {
   try {
-    const { athleteId } = req.params;
+    const { athleteId, coachId } = req.query;
 
-    if (!athleteId) {
+    if (!athleteId && !coachId) {
       return res.status(400).json({
         success: false,
-        message: "athleteId is required",
+        message: "athleteId or coachId is required",
       });
     }
 
-    const practices = await Practice.find({ athleteId })
+    const filter = [];
+
+    if (athleteId) filter.push({ athleteId });
+    if (coachId) filter.push({ coachId });
+
+    const practices = await Practice.find({
+      $or: filter,
+    })
       .populate("coachId", "name email")
+      .populate("athleteId", "name email")
       .sort({ createdAt: -1 });
 
     res.status(200).json({

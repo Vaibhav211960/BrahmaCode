@@ -9,7 +9,7 @@ export const register = async (req, res) => {
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { email, name, password, academy } = req.body;
+    const { email, name, password, academy, level, category } = req.body;
     const existingUser = await coachModel.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "Email already in use" });
@@ -20,6 +20,8 @@ export const register = async (req, res) => {
       name,
       email,
       password: hashedPassword,
+      level,
+      category,
       ...(academy && { academy }),
     });
 

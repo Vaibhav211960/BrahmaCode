@@ -1,22 +1,5 @@
 import mongoose from "mongoose";
 
-// Sub-schema for practice activities
-const practiceActivitySchema = new mongoose.Schema(
-  {
-    activityName: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    duration: {
-      type: String,
-      default: null,
-      min: 0,
-    },
-  },
-  { _id: false }
-);
-
 // Main practice schema
 const practiceSchema = new mongoose.Schema(
   {
@@ -35,12 +18,21 @@ const practiceSchema = new mongoose.Schema(
       ref: "Coach",
       required: true,
     },
-    activities: [practiceActivitySchema],
+    activityName: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    duration: {
+      type: String,
+      default: null,
+      min: 0,
+    },
     note: {
-        type: String
-    }
+      type: String,
+    },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export default mongoose.model("Practice", practiceSchema);

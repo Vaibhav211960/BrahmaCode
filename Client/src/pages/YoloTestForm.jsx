@@ -1,743 +1,767 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import toast from "react-hot-toast";
+import {
+  Target,
+  TrendingUp,
+  Award,
+  CheckCircle,
+  AlertCircle,
+  BarChart2,
+  Activity,
+  Heart,
+  Zap,
+  Shield,
+  Clock,
+  Flag,
+  Star,
+  ChevronRight,
+  Download,
+  RefreshCw,
+} from "lucide-react";
 
-const YoloTestForm = () => {
-  // State for athlete data
-  const [athleteData, setAthleteData] = useState({
-    // Basic info
-    name: '',
-    age: '',
-    gender: '',
-    
-    // Measurements for BMI
-    height: '',
-    weight: '',
-    
-    // Test results
-    ankleDorsiflexion: '',
-    singleLegBalance: '',
-    verticalJump: '',
-    broadJump: '',
-    sprint20m: '',
-    agilityTTest: '',
-    beepTest: '',
-    wallSit: '',
-    cooperTest: ''
-  });
+const YoloTestPerformance = () => {
+  const navigate = useNavigate();
+  // 10 Standard YOLO Test Tasks with backend standards
+  const [standardTasks] = useState([
+    {
+      id: 1,
+      name: "Yo-Yo Endurance Test",
+      code: "yoyo_endurance",
+      unit: "Level",
+      description: "Incremental shuttle run test for aerobic capacity",
+      backendStandard: 18.5,
+      category: "Endurance",
+      icon: <Activity className="w-5 h-5" />,
+    },
+    {
+      id: 2,
+      name: "Vertical Jump",
+      code: "vertical_jump",
+      unit: "cm",
+      description: "Maximum vertical leap height",
+      backendStandard: 55,
+      category: "Power",
+      icon: <Zap className="w-5 h-5" />,
+    },
+    {
+      id: 3,
+      name: "Broad Jump",
+      code: "broad_jump",
+      unit: "m",
+      description: "Horizontal jump distance from standing",
+      backendStandard: 2.3,
+      category: "Power",
+      icon: <Flag className="w-5 h-5" />,
+    },
+    {
+      id: 4,
+      name: "40m Sprint",
+      code: "sprint_40m",
+      unit: "sec",
+      description: "Timed 40-meter sprint",
+      backendStandard: 5.2,
+      category: "Speed",
+      icon: <Clock className="w-5 h-5" />,
+    },
+    {
+      id: 5,
+      name: "Agility T-Test",
+      code: "agility_ttest",
+      unit: "sec",
+      description: "Agility and change of direction",
+      backendStandard: 10.5,
+      category: "Agility",
+      icon: <Target className="w-5 h-5" />,
+    },
+    {
+      id: 6,
+      name: "Reaction Time",
+      code: "reaction_time",
+      unit: "ms",
+      description: "Visual stimulus response time",
+      backendStandard: 200,
+      category: "Reaction",
+      icon: <Shield className="w-5 h-5" />,
+    },
+    {
+      id: 7,
+      name: "Bench Press Max",
+      code: "bench_press",
+      unit: "kg",
+      description: "One-rep maximum bench press",
+      backendStandard: 85,
+      category: "Strength",
+      icon: <TrendingUp className="w-5 h-5" />,
+    },
+    {
+      id: 8,
+      name: "Sit & Reach",
+      code: "sit_reach",
+      unit: "cm",
+      description: "Lower back and hamstring flexibility",
+      backendStandard: 30,
+      category: "Flexibility",
+      icon: <Heart className="w-5 h-5" />,
+    },
+    {
+      id: 9,
+      name: "Plank Hold",
+      code: "plank_hold",
+      unit: "sec",
+      description: "Core endurance test",
+      backendStandard: 120,
+      category: "Core",
+      icon: <Award className="w-5 h-5" />,
+    },
+    {
+      id: 10,
+      name: "Hand Grip Strength",
+      code: "hand_grip",
+      unit: "kg",
+      description: "Maximum hand grip force",
+      backendStandard: 45,
+      category: "Strength",
+      icon: <Star className="w-5 h-5" />,
+    },
+  ]);
 
-  // State for standards and results
-  const [standards, setStandards] = useState(null);
-  const [results, setResults] = useState({});
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [yoloScore, setYoloScore] = useState(0);
-  const [athleteStatus, setAthleteStatus] = useState('');
-  const [totalTestsMeasured, setTotalTestsMeasured] = useState(0);
+  // State for athlete's performance values
+  const [athletePerformance, setAthletePerformance] = useState({});
+  const [overallScore, setOverallScore] = useState(0);
+  const [taskScores, setTaskScores] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [performanceSummary, setPerformanceSummary] = useState({});
+  const [currentTask, setCurrentTask] = useState(1);
 
-  // Mock standards (in production, this comes from API)
-  const mockStandards = {
-    bmi: { good: [18.5, 24.9] },
-    ankleDorsiflexion: { good: 10, average: [6, 9] },
-    singleLegBalance: { excellent: 30, good: [20, 29] },
-    verticalJump: { excellent: 50, good: [40, 49] },
-    broadJump: { excellent: 2.4, good: [2.0, 2.39] },
-    sprint20m: { fast: 3.2, average: [3.3, 3.6] },
-    agilityTTest: { excellent: 10.5, good: [10.6, 11.5] },
-    beepTest: { excellent: 10, good: [8, 9.9] },
-    wallSit: { excellent: 120, good: [90, 119] },
-    cooperTest: { excellent: 2800, good: [2400, 2799] }
-  };
-
-  // Fetch standards on component mount
+  // Initialize performance data
   useEffect(() => {
-    fetchStandards();
+    const initialPerformance = {};
+    standardTasks.forEach((task) => {
+      initialPerformance[task.code] = "";
+    });
+    setAthletePerformance(initialPerformance);
+    calculateScores(initialPerformance);
   }, []);
 
-  // Calculate BMI and score when data changes
-  useEffect(() => {
-    if (standards) {
-      calculateAllResults();
-    }
-  }, [athleteData, standards]);
+  // Calculate scores when performance changes
+  const calculateScores = (performance) => {
+    const scores = {};
+    let totalScore = 0;
+    let tasksCompleted = 0;
+    let excellentCount = 0;
+    let goodCount = 0;
+    let needsWorkCount = 0;
 
-  const fetchStandards = async () => {
+    standardTasks.forEach((task) => {
+      const athleteValue = parseFloat(performance[task.code]);
+      const standardValue = task.backendStandard;
+
+      if (!isNaN(athleteValue)) {
+        tasksCompleted++;
+
+        // Calculate percentage of standard (some tests lower is better)
+        let percentage = 0;
+        if (
+          ["sprint_40m", "agility_ttest", "reaction_time"].includes(task.code)
+        ) {
+          // For time-based tests, lower is better
+          percentage = (standardValue / athleteValue) * 100;
+        } else {
+          // For other tests, higher is better
+          percentage = (athleteValue / standardValue) * 100;
+        }
+
+        // Cap at 150% for exceptional performance
+        percentage = Math.min(percentage, 150);
+
+        // Score calculation (0-10 scale)
+        let score = 0;
+        let status = "";
+        let color = "";
+
+        if (percentage >= 110) {
+          score = 10;
+          status = "Elite";
+          color = "emerald";
+          excellentCount++;
+        } else if (percentage >= 100) {
+          score = 9;
+          status = "Excellent";
+          color = "emerald";
+          excellentCount++;
+        } else if (percentage >= 90) {
+          score = 8;
+          status = "Good";
+          color = "green";
+          goodCount++;
+        } else if (percentage >= 80) {
+          score = 7;
+          status = "Good";
+          color = "green";
+          goodCount++;
+        } else if (percentage >= 70) {
+          score = 6;
+          status = "Average";
+          color = "amber";
+          goodCount++;
+        } else if (percentage >= 60) {
+          score = 5;
+          status = "Average";
+          color = "amber";
+          goodCount++;
+        } else {
+          score = 4;
+          status = "Needs Work";
+          color = "red";
+          needsWorkCount++;
+        }
+
+        scores[task.code] = {
+          score,
+          percentage: Math.round(percentage),
+          status,
+          color,
+          athleteValue,
+          standardValue,
+        };
+
+        totalScore += score;
+      }
+    });
+
+    // Calculate overall score
+    const overall =
+      tasksCompleted > 0
+        ? Math.round((totalScore / (tasksCompleted * 10)) * 100)
+        : 0;
+
+    // Set overall performance summary
+    setPerformanceSummary({
+      tasksCompleted,
+      excellentCount,
+      goodCount,
+      needsWorkCount,
+      averageScore:
+        tasksCompleted > 0
+          ? Math.round((totalScore / tasksCompleted) * 10) / 10
+          : 0,
+    });
+
+    setTaskScores(scores);
+    setOverallScore(overall);
+  };
+
+  const handlePerformanceChange = (taskCode, value) => {
+    const newPerformance = {
+      ...athletePerformance,
+      [taskCode]: value,
+    };
+
+    setAthletePerformance(newPerformance);
+    calculateScores(newPerformance);
+  };
+
+  const handleNextTask = () => {
+    if (currentTask < 10) {
+      setCurrentTask(currentTask + 1);
+    }
+  };
+
+  const handlePrevTask = () => {
+    if (currentTask > 1) {
+      setCurrentTask(currentTask - 1);
+    }
+  };
+
+  const handleResetTask = (taskCode) => {
+    setAthletePerformance((prev) => ({
+      ...prev,
+      [taskCode]: "",
+    }));
+  };
+
+  const handleSaveAll = async () => {
     try {
       setLoading(true);
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 800));
-      
-      // In production, replace with actual API endpoint
-      // const response = await fetch('/api/yolo-standards');
-      // if (!response.ok) throw new Error('Failed to fetch standards');
-      // const data = await response.json();
-      
-      setStandards(mockStandards);
-      setError(null);
-    } catch (err) {
-      setError('Failed to load test standards. Please refresh.');
-      console.error('Error fetching standards:', err);
+      const token = localStorage.getItem("token");
+
+      const athleteRes = await axios.get(
+        "http://localhost:3000/api/athlete/profile",
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+      const athleteId = athleteRes.data.data._id;
+      const age = athleteRes.data.data.age || 19;
+      const gender = athleteRes.data.data.gender || "Male";
+
+      // Map performance data to backend field names
+      const payload = {
+        athleteId,
+        age,
+        gender,
+        ankleDorsiflexion: athletePerformance.vertical_jump || 0,
+        singleLegBalance: athletePerformance.broad_jump || 0,
+        verticalJump: athletePerformance.vertical_jump || 0,
+        broadJump: athletePerformance.broad_jump || 0,
+        sprintTime: athletePerformance.sprint_40m || 0,
+        agilityTtest: athletePerformance.agility_ttest || 0,
+        beepTest: athletePerformance.yoyo_endurance || 0,
+        wallSit: athletePerformance.plank_hold || 0,
+        cooperTest: athletePerformance.hand_grip || 0,
+      };
+
+      const response = await axios.post(
+        "http://localhost:3000/api/yolo/create",
+        payload,
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+
+      if (response.data) {
+        toast.success("YOLO Test results saved successfully!");
+        setTimeout(() => {
+          navigate("/athlete-dashboard");
+        }, 1500);
+      }
+    } catch (error) {
+      console.error("Error saving YOLO test:", error);
+      toast.error(
+        error.response?.data?.message || "Failed to save YOLO test results",
+      );
     } finally {
       setLoading(false);
     }
   };
 
-  const calculateBMI = () => {
-    if (!athleteData.height || !athleteData.weight) return null;
-    
-    const heightInMeters = parseFloat(athleteData.height) / 100;
-    const weight = parseFloat(athleteData.weight);
-    
-    if (heightInMeters <= 0 || weight <= 0) return null;
-    
-    return (weight / (heightInMeters * heightInMeters)).toFixed(1);
-  };
+  const handleExportResults = () => {
+    const data = {
+      athletePerformance,
+      taskScores,
+      overallScore,
+      performanceSummary,
+      date: new Date().toLocaleDateString(),
+    };
 
-  const classifyResult = (testName, value) => {
-    if (!standards || value === '' || isNaN(parseFloat(value))) {
-      return { classification: 'Not measured', color: 'gray', points: 0 };
-    }
-
-    const testStandards = standards[testName];
-    const numValue = parseFloat(value);
-    
-    // Special handling for ranges that need different comparison logic
-    switch (testName) {
-      case 'bmi':
-        return classifyRange(numValue, testStandards, 'good');
-      
-      case 'ankleDorsiflexion':
-        return classifyWithThreshold(numValue, testStandards, 'good', 'average');
-      
-      case 'singleLegBalance':
-      case 'verticalJump':
-      case 'broadJump':
-      case 'cooperTest':
-      case 'wallSit':
-        return classifyHigherIsBetter(numValue, testStandards);
-      
-      case 'sprint20m':
-        return classifyLowerIsBetter(numValue, testStandards, 'fast', 'average');
-      
-      case 'agilityTTest':
-      case 'beepTest':
-        return classifyLowerIsBetter(numValue, testStandards, 'excellent', 'good');
-      
-      default:
-        return { classification: 'Unknown', color: 'gray', points: 0 };
-    }
-  };
-
-  const classifyRange = (value, standards, goodKey) => {
-    const goodRange = standards[goodKey];
-    if (Array.isArray(goodRange) && value >= goodRange[0] && value <= goodRange[1]) {
-      return { classification: 'Good', color: 'green', points: 10 };
-    } else if (value < goodRange[0]) {
-      return { classification: 'Underweight', color: 'yellow', points: 5 };
-    } else {
-      return { classification: 'Overweight', color: 'red', points: 0 };
-    }
-  };
-
-  const classifyWithThreshold = (value, standards, excellentKey, goodKey) => {
-    if (value >= standards[excellentKey]) {
-      return { classification: 'Excellent', color: 'green', points: 10 };
-    }
-    
-    if (standards[goodKey] && Array.isArray(standards[goodKey])) {
-      const [min, max] = standards[goodKey];
-      if (value >= min && value <= max) {
-        return { classification: 'Good', color: 'green', points: 8 };
-      }
-    }
-    
-    if (value > 0) {
-      return { classification: 'Poor', color: 'red', points: 3 };
-    }
-    
-    return { classification: 'Not measured', color: 'gray', points: 0 };
-  };
-
-  const classifyHigherIsBetter = (value, standards) => {
-    if (standards.excellent && value >= standards.excellent) {
-      return { classification: 'Excellent', color: 'green', points: 10 };
-    }
-    
-    if (standards.good && Array.isArray(standards.good)) {
-      const [min, max] = standards.good;
-      if (value >= min && value <= max) {
-        return { classification: 'Good', color: 'green', points: 8 };
-      }
-    }
-    
-    if (value > 0) {
-      return { classification: 'Poor', color: 'red', points: 3 };
-    }
-    
-    return { classification: 'Not measured', color: 'gray', points: 0 };
-  };
-
-  const classifyLowerIsBetter = (value, standards, excellentKey = 'excellent', goodKey = 'good') => {
-    if (standards[excellentKey] && value <= standards[excellentKey]) {
-      return { classification: 'Excellent', color: 'green', points: 10 };
-    }
-    
-    if (standards[goodKey] && Array.isArray(standards[goodKey])) {
-      const [min, max] = standards[goodKey];
-      if (value >= min && value <= max) {
-        return { classification: 'Good', color: 'green', points: 8 };
-      }
-    }
-    
-    if (value > 0) {
-      return { classification: 'Poor', color: 'red', points: 3 };
-    }
-    
-    return { classification: 'Not measured', color: 'gray', points: 0 };
-  };
-
-  const calculateAllResults = () => {
-    if (!standards) return;
-
-    const newResults = {};
-    let totalPoints = 0;
-    let testsMeasured = 0;
-
-    // Calculate BMI result
-    const bmi = calculateBMI();
-    if (bmi) {
-      const bmiResult = classifyResult('bmi', bmi);
-      newResults.bmi = { ...bmiResult, value: bmi };
-      totalPoints += bmiResult.points;
-      testsMeasured++;
-    }
-
-    // Calculate other test results
-    const testNames = [
-      'ankleDorsiflexion',
-      'singleLegBalance',
-      'verticalJump',
-      'broadJump',
-      'sprint20m',
-      'agilityTTest',
-      'beepTest',
-      'wallSit',
-      'cooperTest'
-    ];
-
-    testNames.forEach(testName => {
-      if (athleteData[testName]) {
-        const result = classifyResult(testName, athleteData[testName]);
-        newResults[testName] = { ...result, value: athleteData[testName] };
-        totalPoints += result.points;
-        testsMeasured++;
-      }
+    const blob = new Blob([JSON.stringify(data, null, 2)], {
+      type: "application/json",
     });
-
-    // Calculate final score
-    const score = testsMeasured > 0 ? Math.round((totalPoints / (testsMeasured * 10)) * 100) : 0;
-    setYoloScore(score);
-    setTotalTestsMeasured(testsMeasured);
-
-    // Determine athlete status
-    let status = '';
-    let statusColor = '';
-    if (score >= 80) {
-      status = 'Elite Athlete 🏆';
-      statusColor = 'emerald';
-    } else if (score >= 60) {
-      status = 'Good Potential 👍';
-      statusColor = 'blue';
-    } else if (score >= 40) {
-      status = 'Average Fitness ⚖️';
-      statusColor = 'yellow';
-    } else if (score > 0) {
-      status = 'Needs Improvement 📈';
-      statusColor = 'red';
-    } else {
-      status = 'Not Assessed';
-      statusColor = 'gray';
-    }
-    setAthleteStatus({ text: status, color: statusColor });
-
-    setResults(newResults);
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `yolo-test-results-${new Date().toISOString().split("T")[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   };
 
-  const handleInputChange = (field, value) => {
-    setAthleteData(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
-
-  const getExplanation = (testName) => {
-    const explanations = {
-      bmi: 'Body Mass Index - Measures body fat based on height and weight',
-      ankleDorsiflexion: 'Ankle flexibility measured in degrees (higher is better)',
-      singleLegBalance: 'Time in seconds standing on one leg (longer is better)',
-      verticalJump: 'Jump height in centimeters (higher is better)',
-      broadJump: 'Horizontal jump distance in meters (longer is better)',
-      sprint20m: 'Time to sprint 20 meters in seconds (faster is better)',
-      agilityTTest: 'Agility test time in seconds (faster is better)',
-      beepTest: 'Max shuttle run level (higher is better)',
-      wallSit: 'Time in seconds holding wall sit (longer is better)',
-      cooperTest: 'Distance run in 12 minutes in meters (longer is better)'
-    };
-    return explanations[testName] || '';
-  };
-
-  const getUnit = (testName) => {
-    const units = {
-      height: 'cm',
-      weight: 'kg',
-      ankleDorsiflexion: '°',
-      singleLegBalance: 'sec',
-      verticalJump: 'cm',
-      broadJump: 'm',
-      sprint20m: 'sec',
-      agilityTTest: 'sec',
-      wallSit: 'sec',
-      cooperTest: 'm'
-    };
-    return units[testName] || '';
-  };
-
-  const formatTestName = (testName) => {
-    return testName
-      .replace(/([A-Z])/g, ' $1')
-      .replace(/^./, str => str.toUpperCase());
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    // Check if all required fields are filled
-    const requiredTests = [
-      'ankleDorsiflexion',
-      'singleLegBalance',
-      'verticalJump',
-      'broadJump',
-      'sprint20m',
-      'agilityTTest',
-      'beepTest',
-      'wallSit',
-      'cooperTest'
-    ];
-    
-    const missingTests = requiredTests.filter(test => !athleteData[test]);
-    
-    if (missingTests.length > 0) {
-      alert(`Please fill in all test results. Missing: ${missingTests.length} tests.`);
-      return;
-    }
-    
-    // In production, send data to backend
-    try {
-      console.log('Saving athlete results:', {
-        athleteData,
-        results,
-        yoloScore,
-        status: athleteStatus.text
-      });
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      alert('Athlete results saved successfully!');
-      
-      // Reset form
-      setAthleteData({
-        name: '',
-        age: '',
-        gender: '',
-        height: '',
-        weight: '',
-        ankleDorsiflexion: '',
-        singleLegBalance: '',
-        verticalJump: '',
-        broadJump: '',
-        sprint20m: '',
-        agilityTTest: '',
-        beepTest: '',
-        wallSit: '',
-        cooperTest: ''
-      });
-      setResults({});
-      setYoloScore(0);
-      setAthleteStatus('');
-      setTotalTestsMeasured(0);
-      
-    } catch (err) {
-      console.error('Error saving results:', err);
-      alert('Network error. Please check your connection.');
-    }
-  };
-
-  const handleReset = () => {
-    if (window.confirm('Are you sure you want to reset all data?')) {
-      setAthleteData({
-        name: '',
-        age: '',
-        gender: '',
-        height: '',
-        weight: '',
-        ankleDorsiflexion: '',
-        singleLegBalance: '',
-        verticalJump: '',
-        broadJump: '',
-        sprint20m: '',
-        agilityTTest: '',
-        beepTest: '',
-        wallSit: '',
-        cooperTest: ''
-      });
-      setResults({});
-      setYoloScore(0);
-      setAthleteStatus('');
-      setTotalTestsMeasured(0);
-    }
-  };
-
-  const getColorClasses = (color) => {
+  const getStatusColor = (color) => {
     const colorMap = {
-      green: 'bg-emerald-100 text-emerald-800 border-emerald-200',
-      red: 'bg-red-100 text-red-800 border-red-200',
-      yellow: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-      gray: 'bg-gray-100 text-gray-800 border-gray-200',
-      blue: 'bg-blue-100 text-blue-800 border-blue-200',
-      emerald: 'bg-emerald-500 text-white',
-      purple: 'bg-purple-500 text-white'
+      emerald: "bg-emerald-100 text-emerald-800 border-emerald-200",
+      green: "bg-green-100 text-green-800 border-green-200",
+      amber: "bg-amber-100 text-amber-800 border-amber-200",
+      red: "bg-red-100 text-red-800 border-red-200",
     };
-    return colorMap[color] || colorMap.gray;
+    return colorMap[color] || "bg-gray-100 text-gray-800 border-gray-200";
   };
 
-  const getScoreColor = (score) => {
-    if (score >= 80) return 'text-emerald-600';
-    if (score >= 60) return 'text-blue-600';
-    if (score >= 40) return 'text-yellow-600';
-    return 'text-red-600';
+  const getOverallStatus = () => {
+    if (overallScore >= 90)
+      return { text: "Elite Performer 🏆", color: "emerald" };
+    if (overallScore >= 80)
+      return { text: "Excellent Performance ⭐", color: "green" };
+    if (overallScore >= 70)
+      return { text: "Good Performance 👍", color: "amber" };
+    if (overallScore >= 60)
+      return { text: "Average Performance ⚖️", color: "amber" };
+    if (overallScore > 0) return { text: "Needs Improvement 📈", color: "red" };
+    return { text: "Not Assessed", color: "gray" };
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
-          <p className="text-gray-600">Loading test standards...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
-        <div className="bg-white rounded-xl shadow-lg p-8 max-w-md text-center">
-          <div className="text-red-500 text-4xl mb-4">⚠️</div>
-          <h2 className="text-xl font-bold text-gray-800 mb-2">Error Loading Standards</h2>
-          <p className="text-gray-600 mb-6">{error}</p>
-          <button
-            onClick={fetchStandards}
-            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg transition duration-300"
-          >
-            Retry
-          </button>
-        </div>
-      </div>
-    );
-  }
+  const currentTaskData = standardTasks[currentTask - 1];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 md:p-6">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 md:p-6 font-sans">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <header className="mb-8 md:mb-12 text-center">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-3">
-            🏃‍♂️ YOLO Athlete Test
-          </h1>
-          <p className="text-gray-600 text-lg">
-            Comprehensive fitness assessment for athletes
-          </p>
-          <div className="mt-4 flex flex-wrap justify-center gap-2">
-            <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-emerald-100 text-emerald-800">
-              Green = Good/Excellent
-            </span>
-            <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
-              Yellow = Average
-            </span>
-            <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">
-              Red = Needs Improvement
-            </span>
-          </div>
-        </header>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left Column - Form */}
-          <div className="lg:col-span-2">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Athlete Information */}
-              <div className="bg-white rounded-2xl shadow-lg p-6">
-                <div className="flex items-center mb-6">
-                  <div className="w-1.5 h-6 bg-blue-500 rounded-full mr-3"></div>
-                  <h2 className="text-xl font-bold text-gray-800">Athlete Information</h2>
+        <div className="mb-8">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-blue-700 flex items-center justify-center">
+                  <Target className="w-6 h-6 text-white" />
                 </div>
-                
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Full Name *
-                    </label>
-                    <input
-                      type="text"
-                      value={athleteData.name}
-                      onChange={(e) => handleInputChange('name', e.target.value)}
-                      required
-                      placeholder="Enter athlete name"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Age
-                      </label>
-                      <input
-                        type="number"
-                        value={athleteData.age}
-                        onChange={(e) => handleInputChange('age', e.target.value)}
-                        placeholder="Years"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Gender
-                      </label>
-                      <select
-                        value={athleteData.gender}
-                        onChange={(e) => handleInputChange('gender', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
-                      >
-                        <option value="">Select</option>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                        <option value="other">Other</option>
-                      </select>
-                    </div>
-                    <div className="md:col-span-1">
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Tests Completed
-                      </label>
-                      <div className="flex items-center h-full">
-                        <div className={`px-4 py-3 rounded-lg w-full text-center font-semibold ${getScoreColor(yoloScore)}`}>
-                          {totalTestsMeasured} / 10
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* BMI Calculation */}
-              
-              {/* Fitness Tests */}
-              <div className="bg-white rounded-2xl shadow-lg p-6">
-                <div className="flex items-center mb-6">
-                  <div className="w-1.5 h-6 bg-green-500 rounded-full mr-3"></div>
-                  <h2 className="text-xl font-bold text-gray-800">Fitness Tests</h2>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {[
-                    'ankleDorsiflexion',
-                    'singleLegBalance', 
-                    'verticalJump',
-                    'broadJump',
-                    'sprint20m',
-                    'agilityTTest',
-                    'beepTest',
-                    'wallSit',
-                    'cooperTest'
-                  ].map((test) => (
-                    <div key={test} className="space-y-3">
-                      <label className="block text-sm font-medium text-gray-700">
-                        {formatTestName(test)} *
-                      </label>
-                      
-                      <div className="relative">
-                        <input
-                          type="number"
-                          step={['broadJump', 'sprint20m', 'agilityTTest'].includes(test) ? "0.01" : "0.1"}
-                          value={athleteData[test]}
-                          onChange={(e) => handleInputChange(test, e.target.value)}
-                          required
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-300"
-                        />
-                        <span className="absolute right-3 top-3 text-gray-500">
-                          {getUnit(test)}
-                        </span>
-                      </div>
-                      
-                      {results[test] && (
-                        <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border ${getColorClasses(results[test].color)}`}>
-                          {results[test].classification}
-                        </div>
-                      )}
-                      
-                      <p className="text-xs text-gray-500 leading-relaxed">
-                        {getExplanation(test)}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Form Actions */}
-              <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                <button
-                  type="submit"
-                  className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-4 px-6 rounded-xl transition duration-300 transform hover:-translate-y-1 hover:shadow-lg"
-                >
-                  Save Athlete Results
-                </button>
-                <button
-                  type="button"
-                  onClick={handleReset}
-                  className="flex-1 bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white font-semibold py-4 px-6 rounded-xl transition duration-300"
-                >
-                  Reset All Data
-                </button>
-              </div>
-            </form>
-          </div>
-
-          {/* Right Column - Results */}
-          <div className="lg:col-span-1">
-            <div className="sticky top-6 space-y-6">
-              {/* Score Card */}
-              <div className="bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl shadow-xl overflow-hidden">
-                <div className="p-6 text-white">
-                  <h3 className="text-xl font-bold mb-2">YOLO Assessment Score</h3>
-                  <p className="text-blue-100 mb-6">Overall fitness evaluation</p>
-                  
-                  <div className="flex flex-col items-center justify-center py-4">
-                    <div className="relative">
-                      <div className={`text-6xl md:text-7xl font-bold ${getScoreColor(yoloScore)}`}>
-                        {yoloScore}
-                      </div>
-                      <div className="text-center text-blue-100 text-lg mt-2">out of 100</div>
-                    </div>
-                    
-                    {athleteStatus && (
-                      <div className="mt-6 text-center">
-                        <div className={`inline-flex items-center px-6 py-3 rounded-full text-lg font-bold mb-3 ${getColorClasses(athleteStatus.color)}`}>
-                          {athleteStatus.text}
-                        </div>
-                        <p className="text-blue-100 text-sm">
-                          {yoloScore >= 80 
-                            ? 'Excellent overall fitness. Elite athlete level. 🏆'
-                            : yoloScore >= 60
-                            ? 'Good fitness level with potential for improvement. 👍'
-                            : yoloScore >= 40
-                            ? 'Average fitness. Focus on specific areas. ⚖️'
-                            : yoloScore > 0
-                            ? 'Needs significant improvement in multiple areas. 📈'
-                            : 'Complete tests to get your score.'
-                          }
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-                
-                <div className="bg-white/10 backdrop-blur-sm p-4">
-                  <div className="grid grid-cols-3 gap-2 text-center text-sm">
-                    <div>
-                      <div className="font-semibold text-white">Tests</div>
-                      <div className="text-xl font-bold text-white">{totalTestsMeasured}/10</div>
-                    </div>
-                    <div>
-                      <div className="font-semibold text-white">Good</div>
-                      <div className="text-xl font-bold text-emerald-300">
-                        {Object.values(results).filter(r => r.color === 'green').length}
-                      </div>
-                    </div>
-                    <div>
-                      <div className="font-semibold text-white">To Improve</div>
-                      <div className="text-xl font-bold text-red-300">
-                        {Object.values(results).filter(r => r.color === 'red' || r.color === 'yellow').length}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Test Results Summary */}
-              <div className="bg-white rounded-2xl shadow-lg p-6">
-                <h3 className="text-lg font-bold text-gray-800 mb-4">Test Results Summary</h3>
-                
-                <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2">
-                  {Object.entries(results).map(([test, result]) => (
-                    <div 
-                      key={test} 
-                      className="flex items-center justify-between p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition duration-200"
-                    >
-                      <div>
-                        <span className="font-medium text-gray-700">{formatTestName(test)}</span>
-                        <span className="text-sm text-gray-500 ml-2">{result.value} {getUnit(test)}</span>
-                      </div>
-                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${getColorClasses(result.color)}`}>
-                        {result.classification}
-                      </span>
-                    </div>
-                  ))}
-                  
-                  {Object.keys(results).length === 0 && (
-                    <div className="text-center py-8 text-gray-400">
-                      <div className="text-4xl mb-2">📊</div>
-                      <p>Complete tests to see results</p>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Legend */}
-              <div className="bg-white rounded-2xl shadow-lg p-6">
-                <h3 className="text-lg font-bold text-gray-800 mb-4">Scoring Legend</h3>
-                <div className="space-y-3">
-                  <div className="flex items-center">
-                    <div className="w-3 h-3 rounded-full bg-emerald-500 mr-3"></div>
-                    <span className="text-gray-700">Excellent/Good</span>
-                    <span className="ml-auto font-semibold text-emerald-600">8-10 pts</span>
-                  </div>
-                  <div className="flex items-center">
-                    <div className="w-3 h-3 rounded-full bg-yellow-500 mr-3"></div>
-                    <span className="text-gray-700">Average</span>
-                    <span className="ml-auto font-semibold text-yellow-600">5-7 pts</span>
-                  </div>
-                  <div className="flex items-center">
-                    <div className="w-3 h-3 rounded-full bg-red-500 mr-3"></div>
-                    <span className="text-gray-700">Needs Improvement</span>
-                    <span className="ml-auto font-semibold text-red-600">0-4 pts</span>
-                  </div>
-                  <div className="pt-3 border-t border-gray-200">
-                    <p className="text-sm text-gray-500">
-                      Each test contributes up to 10 points. Total score is calculated as percentage of maximum possible points.
-                    </p>
-                  </div>
-                </div>
-              </div>
+                YOLO Test Performance Assessment
+              </h1>
+              <p className="text-gray-600 mt-2">
+                10 standardized fitness tests with backend standards comparison
+              </p>
+            </div>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={handleExportResults}
+                className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                <Download className="w-4 h-4" />
+                Export Results
+              </button>
             </div>
           </div>
         </div>
 
-        {/* Footer */}
-        <footer className="mt-8 text-center text-gray-500 text-sm">
-          <p>YOLO Athlete Test System v1.0 • Designed for coaches and trainers</p>
-          <p className="mt-1">Complete all tests for accurate assessment</p>
-        </footer>
+        <div className="grid lg:grid-cols-3 gap-6">
+          {/* Left Column - Overall Score & Summary */}
+          <div className="space-y-6">
+            {/* Overall Score Card */}
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-lg font-bold text-gray-900">
+                  Overall YOLO Score
+                </h3>
+                <BarChart2 className="w-5 h-5 text-blue-600" />
+              </div>
+
+              <div className="text-center mb-6">
+                <div
+                  className={`text-6xl font-bold ${
+                    overallScore >= 90
+                      ? "text-emerald-600"
+                      : overallScore >= 80
+                        ? "text-green-600"
+                        : overallScore >= 70
+                          ? "text-amber-600"
+                          : overallScore >= 60
+                            ? "text-orange-600"
+                            : "text-red-600"
+                  }`}
+                >
+                  {overallScore}
+                </div>
+                <div className="text-gray-600 text-sm">OUT OF 100</div>
+
+                <div className="mt-4">
+                  <div
+                    className={`inline-flex items-center gap-2 px-4 py-2 rounded-full font-bold ${getStatusColor(getOverallStatus().color)}`}
+                  >
+                    {getOverallStatus().text}
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-700">Tests Completed</span>
+                  <span className="font-bold text-blue-600">
+                    {performanceSummary.tasksCompleted || 0}/10
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-700">Elite Performances</span>
+                  <span className="font-bold text-emerald-600">
+                    {performanceSummary.excellentCount || 0}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-700">Average Score per Test</span>
+                  <span className="font-bold text-amber-600">
+                    {performanceSummary.averageScore || 0}/10
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Performance Summary */}
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
+              <h3 className="font-bold text-gray-900 mb-4">
+                Performance Breakdown
+              </h3>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between p-3 bg-emerald-50 rounded-lg">
+                  <div className="flex items-center gap-2">
+                    <Award className="w-4 h-4 text-emerald-600" />
+                    <span className="text-emerald-700">Elite/Excellent</span>
+                  </div>
+                  <div className="font-bold text-emerald-800">
+                    {performanceSummary.excellentCount || 0}
+                  </div>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-green-600" />
+                    <span className="text-green-700">Good/Average</span>
+                  </div>
+                  <div className="font-bold text-green-800">
+                    {performanceSummary.goodCount || 0}
+                  </div>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-red-50 rounded-lg">
+                  <div className="flex items-center gap-2">
+                    <AlertCircle className="w-4 h-4 text-red-600" />
+                    <span className="text-red-700">Needs Work</span>
+                  </div>
+                  <div className="font-bold text-red-800">
+                    {performanceSummary.needsWorkCount || 0}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Task Navigation */}
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
+              <h3 className="font-bold text-gray-900 mb-4">Test Navigation</h3>
+              <div className="grid grid-cols-2 gap-2">
+                {standardTasks.map((task, index) => (
+                  <button
+                    key={task.id}
+                    onClick={() => setCurrentTask(index + 1)}
+                    className={`p-3 rounded-lg text-center transition-all ${
+                      currentTask === task.id
+                        ? "bg-blue-100 border-2 border-blue-300"
+                        : "bg-gray-50 border border-gray-200 hover:bg-gray-100"
+                    }`}
+                  >
+                    <div className="font-medium text-sm">
+                      {index + 1}. {task.name.split(" ")[0]}
+                    </div>
+                    {taskScores[task.code] && (
+                      <div
+                        className={`text-xs mt-1 px-2 py-1 rounded-full ${getStatusColor(taskScores[task.code].color)}`}
+                      >
+                        {taskScores[task.code].score}/10
+                      </div>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Middle Column - Current Task Input */}
+          <div className="lg:col-span-2">
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600">
+                    {currentTaskData.icon}
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900">
+                      Test {currentTask}: {currentTaskData.name}
+                    </h3>
+                    <p className="text-gray-600">
+                      {currentTaskData.description}
+                    </p>
+                  </div>
+                </div>
+                <div className="text-sm text-gray-500">
+                  Task {currentTask}/10
+                </div>
+              </div>
+
+              {/* Current Task Details */}
+              <div className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Backend Standard */}
+                  <div className="p-4 bg-gray-50 rounded-xl border border-gray-200">
+                    <div className="text-sm text-gray-500 mb-2">
+                      Backend Standard (Expected)
+                    </div>
+                    <div className="text-2xl font-bold text-gray-900">
+                      {currentTaskData.backendStandard} {currentTaskData.unit}
+                    </div>
+                    <div className="text-xs text-gray-500 mt-2">
+                      Target value for professional athletes
+                    </div>
+                  </div>
+
+                  {/* Athlete's Performance */}
+                  <div className="p-4 bg-blue-50 rounded-xl border border-blue-200">
+                    <div className="text-sm text-blue-600 mb-2">
+                      Athlete's Performance
+                    </div>
+                    <div className="relative">
+                      <input
+                        type="number"
+                        value={athletePerformance[currentTaskData.code] || ""}
+                        onChange={(e) =>
+                          handlePerformanceChange(
+                            currentTaskData.code,
+                            e.target.value,
+                          )
+                        }
+                        step={currentTaskData.unit === "sec" ? "0.01" : "0.1"}
+                        placeholder={`Enter value in ${currentTaskData.unit}`}
+                        className="w-full px-4 py-3 bg-white border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      />
+                      <span className="absolute right-3 top-3 text-gray-500">
+                        {currentTaskData.unit}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Current Score Display */}
+                {taskScores[currentTaskData.code] && (
+                  <div className="p-4 bg-gradient-to-r from-gray-50 to-blue-50 rounded-xl border border-gray-200">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="text-sm text-gray-500">
+                          Current Assessment
+                        </div>
+                        <div className="text-lg font-bold text-gray-900">
+                          Score: {taskScores[currentTaskData.code].score}/10
+                        </div>
+                      </div>
+                      <div
+                        className={`px-4 py-2 rounded-full font-bold ${getStatusColor(taskScores[currentTaskData.code].color)}`}
+                      >
+                        {taskScores[currentTaskData.code].status}
+                      </div>
+                    </div>
+                    <div className="mt-3 text-sm text-gray-600">
+                      Athlete achieved{" "}
+                      {taskScores[currentTaskData.code].athleteValue}{" "}
+                      {currentTaskData.unit}(
+                      {taskScores[currentTaskData.code].percentage}% of
+                      standard)
+                    </div>
+                  </div>
+                )}
+
+                {/* Action Buttons */}
+                <div className="flex items-center justify-between pt-6 border-t border-gray-200">
+                  <div className="flex gap-3">
+                    <button
+                      onClick={handlePrevTask}
+                      disabled={currentTask === 1}
+                      className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Previous
+                    </button>
+                    <button
+                      onClick={handleNextTask}
+                      disabled={currentTask === 10}
+                      className="px-4 py-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Next Task
+                    </button>
+                  </div>
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => handleResetTask(currentTaskData.code)}
+                      className="flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors"
+                    >
+                      <RefreshCw className="w-4 h-4" />
+                      Reset
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* All Tasks Results Table */}
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 mt-6">
+              <h3 className="font-bold text-gray-900 mb-6">All Test Results</h3>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="bg-gray-50 border-b border-gray-200">
+                      <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                        Test Name
+                      </th>
+                      <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                        Standard
+                      </th>
+                      <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                        Athlete Value
+                      </th>
+                      <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                        Score
+                      </th>
+                      <th className="py-3 px-4 text-left text-sm font-medium text-gray-700">
+                        Status
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {standardTasks.map((task) => (
+                      <tr
+                        key={task.id}
+                        className="border-b border-gray-100 hover:bg-gray-50"
+                      >
+                        <td className="py-4 px-4">
+                          <div className="flex items-center gap-2">
+                            {task.icon}
+                            <div>
+                              <div className="font-medium text-gray-900">
+                                {task.name}
+                              </div>
+                              <div className="text-xs text-gray-500">
+                                {task.category}
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="py-4 px-4">
+                          <div className="font-medium text-gray-900">
+                            {task.backendStandard} {task.unit}
+                          </div>
+                        </td>
+                        <td className="py-4 px-4">
+                          <div className="font-medium text-gray-900">
+                            {athletePerformance[task.code] || "--"} {task.unit}
+                          </div>
+                        </td>
+                        <td className="py-4 px-4">
+                          <div className="font-bold text-gray-900">
+                            {taskScores[task.code]
+                              ? `${taskScores[task.code].score}/10`
+                              : "--"}
+                          </div>
+                        </td>
+                        <td className="py-4 px-4">
+                          {taskScores[task.code] ? (
+                            <div
+                              className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(taskScores[task.code].color)}`}
+                            >
+                              {taskScores[task.code].status}
+                            </div>
+                          ) : (
+                            <div className="text-gray-400">Not assessed</div>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Save All Button */}
+              <div className="mt-6 pt-6 border-t border-gray-200">
+                <button
+                  onClick={handleSaveAll}
+                  disabled={loading}
+                  className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all disabled:opacity-70"
+                >
+                  {loading ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      Saving Results...
+                    </>
+                  ) : (
+                    <>
+                      <CheckCircle className="w-5 h-5" />
+                      Save All Test Results
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
 };
 
-export default YoloTestForm;
+export default YoloTestPerformance;
