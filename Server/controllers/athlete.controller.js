@@ -1,11 +1,8 @@
 import { validationResult } from "express-validator";
-<<<<<<< HEAD
 import athleteModel from "../models/athlete.model.js";
 import generateOtp from "../utils/OTPGenerator.js";
 import transporter from "../config/transporter.js";
 import otpStore from "../utils/OTPStore.js";
-import jwt from "jsonwebtoken";
-import Coach from "../models/coach.model.js";
 import { handleInvitation } from "../services/userServices.js";
 
 export const sendotp = async (req, res) => {
@@ -65,32 +62,6 @@ export const verifyOtpAndCompleteRegistration = async (req, res) => {
       name,
       email,
       password: hashedPassword,
-=======
-
-import Athlete from "../models/athlete.model.js";
-
-export const register = async (req, res) => {
-  try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-
-    const { email, name, password, sport } = req.body;
-    console.log(req.body);
-
-    const existingUser = await Athlete.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: "Email already in use" });
-    }
-
-    const hashedPassword = await Athlete.hashPassword(password);
-    const newAthlete = new Athlete({
-      name,
-      email,
-      password: hashedPassword,
-      ...(sport && { sport }),
->>>>>>> 4085d9d21c0de8746ad4548fe4fc682ed816d859
     });
 
     await newAthlete.save();
@@ -107,15 +78,10 @@ export const register = async (req, res) => {
       message: "Athlete registered successfully",
     });
   } catch (error) {
-<<<<<<< HEAD
-=======
-    console.log(error);
->>>>>>> 4085d9d21c0de8746ad4548fe4fc682ed816d859
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
-<<<<<<< HEAD
 import Athlete from "../models/athlete.model.js";
 import invitationModel from "../models/invitation.model.js";
 
@@ -129,50 +95,20 @@ export const loginAthlete = async (req, res) => {
       return res
         .status(404)
         .json({ message: "Athlete not found with this email" });
-=======
-export const loginAthlete = async (req, res) => {
-  try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-
-    const { email, password } = req.body;
-
-    const athlete = await Athlete.findOne({ email });
-    if (!athlete) {
-      return res.status(400).json({ message: "Invalid email or password" });
->>>>>>> 4085d9d21c0de8746ad4548fe4fc682ed816d859
     }
 
     const isMatch = await athlete.comparePassword(password);
     if (!isMatch) {
-<<<<<<< HEAD
       return res.status(401).json({ message: "Invalid credentials" });
-=======
-      return res.status(400).json({ message: "Invalid email or password" });
->>>>>>> 4085d9d21c0de8746ad4548fe4fc682ed816d859
     }
 
     const token = athlete.generateAuthToken();
 
-<<<<<<< HEAD
     res.status(200).json({
-=======
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "Strict",
-    });
-
-    res.status(200).json({
-      success: true,
->>>>>>> 4085d9d21c0de8746ad4548fe4fc682ed816d859
       token,
       user: {
         id: athlete._id,
         name: athlete.name,
-<<<<<<< HEAD
         role: "athlete",
       },
     });
@@ -291,16 +227,6 @@ export const resendOtp = async (req, res) => {
 
     res.status(200).json({ message: "OTP resent to email for verification" });
   } catch (error) {
-=======
-        email: athlete.email,
-        sport: athlete.sport,
-      },
-      type: "Athlete",
-      message: "Login successful",
-    });
-  } catch (error) {
-    console.log(error);
->>>>>>> 4085d9d21c0de8746ad4548fe4fc682ed816d859
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
@@ -308,20 +234,12 @@ export const resendOtp = async (req, res) => {
 export const resetPassword = async (req, res) => {
   try {
     const { email, newPassword } = req.body;
-<<<<<<< HEAD
     const Athlete = await athleteModel.findOne({ email });
-=======
-    const Athlete = await Athlete.findOne({ email });
->>>>>>> 4085d9d21c0de8746ad4548fe4fc682ed816d859
     if (!Athlete) {
       return res.status(400).json({ message: "Athlete not found" });
     }
 
-<<<<<<< HEAD
     const hashedPassword = await athleteModel.hashPassword(newPassword);
-=======
-    const hashedPassword = await Athlete.hashPassword(newPassword);
->>>>>>> 4085d9d21c0de8746ad4548fe4fc682ed816d859
     Athlete.password = hashedPassword;
     await Athlete.save();
 
@@ -334,7 +252,7 @@ export const resetPassword = async (req, res) => {
 export const handleCoachInvitation = async (req, res) => {
   try {
     const { invitationId, action } = req.body;
-    const result = await userSer.handleInvitation(
+    const result = await handleInvitation(
       invitationId,
       action,
       req.user.email,
@@ -376,3 +294,25 @@ export const getAllAthletes = async (req, res) => {
     });
   }
 };
+
+export const profile = async(req, res) => {
+  try {
+    const athlete = await Athlete.findOne({ email: req.user.email }).select("-password");
+    
+    if (!athlete) {
+      return res.status(404).json({ message: "Athlete not found" });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Profile fetched successfully",
+      data: athlete,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch profile",
+      error: error.message,
+    });
+  }
+}
