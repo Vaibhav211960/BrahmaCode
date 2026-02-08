@@ -53,37 +53,11 @@ const CoachDashboard = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-<<<<<<< HEAD
-        const token = localStorage.getItem("token");
-
-        // Fetch athletes
-        const athletesRes = await axios.get(
-          "http://localhost:3000/api/athlete/all",
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        setAthletes(athletesRes.data.data);
-
-        // Fetch coach's assigned practices
-        setPracticesLoading(true);
-        const coachRes = await axios.get(
-          "http://localhost:3000/api/coaches/profile",
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        const coachId = coachRes.data.data._id;
-
-        const practicesRes = await axios.get(
-          `http://localhost:3000/api/practice/get?coachId=${coachId}`,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        setAssignedPractices(practicesRes.data.data || []);
-
-=======
         const token = localStorage.getItem('token');
         const res = await axios.get("http://localhost:3000/api/athlete/all", {
           headers: { Authorization: `Bearer ${token}` }
         });
         setAthletes(res.data.data);
->>>>>>> e1938560640e15bcca276e097a013aebb40d4e4f
         setError(null);
       } catch (err) {
         console.error("Fetch Error:", err);

@@ -1,9 +1,4 @@
 import mongoose from "mongoose";
-<<<<<<< HEAD
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-=======
->>>>>>> e1938560640e15bcca276e097a013aebb40d4e4f
 
 const coachModel = mongoose.Schema(
   {
