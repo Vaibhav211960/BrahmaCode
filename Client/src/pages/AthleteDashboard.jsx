@@ -225,24 +225,8 @@ const AthleteDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50 p-6 md:p-10 font-sans">
-<<<<<<< HEAD
-      {/* Top Navigation Bar - Moved to top */}
-      <div className="max-w-7xl mx-auto mb-8">
-        <div className="flex justify-between items-center">
-          {/* Welcome Text */}
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
-              Welcome back,{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">
-                {athlete.name}
-              </span>{" "}
-              👋
-            </h1>
-            <p className="text-gray-600 mt-1">
-              Track your performance and stay connected
-            </p>
-=======
+    <>
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50 p-6 md:p-10 font-sans">
       <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-8">
         
         <aside className="w-full lg:w-80 space-y-6">
@@ -294,8 +278,8 @@ const AthleteDashboard = () => {
             >
               <LogOut size={18} /> Logout Session
             </button>
->>>>>>> 2ded9c3b101655f5ee7108280bc6335775ec67f9
-          </div>
+            </div>
+        </aside>
 
           {/* Top Right Actions */}
           <div className="flex items-center gap-3">
@@ -474,8 +458,9 @@ const AthleteDashboard = () => {
             >
               <LogOut size={18} /> Logout Session
             </button>
-          </div>
-        </aside>
+
+       </div>
+       </div>
 
         {/* Main Content Grid */}
         <div className="grid lg:grid-cols-3 gap-6 flex-1">
@@ -661,7 +646,8 @@ const AthleteDashboard = () => {
           </div>
         </div>
       </div>
-    </div>
+    </>
+   
   );
 };
 
