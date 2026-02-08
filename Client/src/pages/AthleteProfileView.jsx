@@ -94,30 +94,50 @@ const AthleteProfileView = () => {
       name: "Technical Running Test",
       description: "Running Form & Speed Analysis",
       icon: <Activity size={24} />,
-      to: "/RunningMockTest"
+      to: "/RunningMockTest",
+      sport: ["Running", "Track & Field", "100m Sprint", "60m Sprint", "200m Sprint", "400m Sprint"]
     },
     {
       id: "longjump",
       name: "Long Jump Test",
       description: "Jump Distance & Technique",
       icon: <Target size={24} />,
-      to: "/LongJumpMockTest"
+      to: "/LongJumpMockTest",
+      sport: ["Long Jump", "Jump"]
     },
     {
       id: "javelin",
       name: "Javelin Test",
       description: "Throwing Distance & Accuracy",
       icon: <Trophy size={24} />,
-      to: "/JavelinMockTest"
+      to: "/JavelinMockTest",
+      sport: ["Javelin", "Throwing", "Shot Put"]
     },
     {
       id: "relay",
       name: "Relay Test",
       description: "Team Sprint & Baton Exchange",
       icon: <Dumbbell size={24} />,
-      to: "/RelayMockTest"
+      to: "/RelayMockTest",
+      sport: ["Relay", "4x100m", "4x400m"]
     },
   ];
+
+  // Filter tests based on athlete's sport/specialization
+  const getApplicableTests = () => {
+    const athleteSport = (athlete.sport || "").toLowerCase();
+    const athleteSpecialization = (athlete.specialization || "").toLowerCase();
+    
+    return tests.filter((test) => {
+      return test.sport.some(
+        (s) =>
+          athleteSport.includes(s.toLowerCase()) ||
+          athleteSpecialization.includes(s.toLowerCase())
+      );
+    });
+  };
+
+  const applicableTests = getApplicableTests();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50 p-6 md:p-10 font-sans">
@@ -224,29 +244,41 @@ const AthleteProfileView = () => {
                 </h3>
               </div>
 
-              <div className="grid md:grid-cols-2 gap-4">
-                {tests.map((test) => (
-                  <div
-                    key={test.id}
-                    className="p-6 border-2 border-gray-100 rounded-2xl hover:border-blue-300 hover:bg-blue-50/30 transition-all group cursor-pointer"
-                  >
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="text-blue-600">{test.icon}</div>
-                      <button
-                      onClick={() => navigate(test.to, {state: {athlete}})}
-                        disabled={assigningTest}
-                        className="opacity-0 group-hover:opacity-100 px-4 py-2 bg-blue-600 text-white text-xs font-bold rounded-xl hover:bg-blue-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        {assigningTest ? "Evaluating..." : "Evaluate"}
-                      </button>
+              {applicableTests.length > 0 ? (
+                <div className="grid md:grid-cols-2 gap-4">
+                  {applicableTests.map((test) => (
+                    <div
+                      key={test.id}
+                      className="p-6 border-2 border-gray-100 rounded-2xl hover:border-blue-300 hover:bg-blue-50/30 transition-all group cursor-pointer"
+                    >
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="text-blue-600">{test.icon}</div>
+                        <button
+                          onClick={() => navigate(test.to, {state: {athlete}})}
+                          disabled={assigningTest}
+                          className="opacity-0 group-hover:opacity-100 px-4 py-2 bg-blue-600 text-white text-xs font-bold rounded-xl hover:bg-blue-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          {assigningTest ? "Evaluating..." : "Evaluate"}
+                        </button>
+                      </div>
+                      <h4 className="font-bold text-gray-900 mb-1">
+                        {test.name}
+                      </h4>
+                      <p className="text-xs text-gray-500">{test.description}</p>
                     </div>
-                    <h4 className="font-bold text-gray-900 mb-1">
-                      {test.name}
-                    </h4>
-                    <p className="text-xs text-gray-500">{test.description}</p>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12 bg-gray-50 rounded-2xl">
+                  <AlertTriangle className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-600 font-medium">
+                    No applicable tests for <span className="font-bold text-gray-900">{athlete.sport || athlete.specialization}</span>
+                  </p>
+                  <p className="text-sm text-gray-500 mt-2">
+                    This athlete's sport does not have a corresponding test yet.
+                  </p>
+                </div>
+              )}
             </section>
 
             {/* TEST HISTORY */}
