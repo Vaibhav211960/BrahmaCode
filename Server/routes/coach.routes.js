@@ -1,36 +1,3 @@
-<<<<<<< HEAD
-import express from "express";
-const router = express.Router();
-import { body } from "express-validator";
-import {
-  loginCoach,
-  resetPassword,
-  removeDisciple,
-  sendInvitationToAthlete,
-  register,
-  profile,
-} from "../controllers/coach.controller.js";
-
-import coachMiddleware from "../middleware/coach.middleware.js";
-
-router.post(
-  "/register",
-  body("email").isEmail().withMessage("Invalid email address"),
-  register,
-);
-
-router.post(
-  "/login",
-  body("email").isEmail().withMessage("Invalid email address"),
-  body("password")
-    .isLength({ min: 6 })
-    .withMessage("Password must be at least 6 characters long"),
-  loginCoach,
-);
-
-router.post(
-  "/reset-password",
-=======
 import express from "express"
 const router = express.Router()
 import {body} from "express-validator"
@@ -52,7 +19,6 @@ router.post("/login",
 );
 
 router.post("/reset-password",
->>>>>>> a96a4ca4eff7cefa461723750f71ce87ffa21b08
   body("email").isEmail().withMessage("Invalid email address"),
   body("newPassword")
     .isLength({ min: 6 })
@@ -62,12 +28,6 @@ router.post("/reset-password",
 
 // router.put("/add-athlete", coachMiddleware, sendInvitationToAthlete);
 
-<<<<<<< HEAD
-router.get("/profile", coachMiddleware, profile);
-
-router.put("/disciple/remove", removeDisciple);
-=======
 // router.put("/disciple/remove", removeDisciple);
->>>>>>> a96a4ca4eff7cefa461723750f71ce87ffa21b08
 
 export default router;

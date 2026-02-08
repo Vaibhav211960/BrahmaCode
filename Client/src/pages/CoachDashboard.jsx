@@ -33,11 +33,6 @@ const CoachDashboard = () => {
           headers: { Authorization: `Bearer ${token}` }
         });
         setAthletes(res.data.data);
-<<<<<<< HEAD
-        console.log(res.data.data);
-        
-=======
->>>>>>> a96a4ca4eff7cefa461723750f71ce87ffa21b08
         setError(null);
       } catch (err) {
         console.error("Fetch Error:", err);

@@ -19,14 +19,10 @@ const LongJumpMockTest = () => {
     balanceAfterLanding: '',
     repeatedFouls: '0' // Number based on controller logic
   });
-<<<<<<< HEAD
-
-=======
   const location = useLocation();
   const { athlete } = location.state || {};
 
   
->>>>>>> 3e1acaebabcfe4b3e7b35ccbee417e4ac8e23f0c
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleTechniqueChange = (check, value) => {

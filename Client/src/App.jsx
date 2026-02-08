@@ -17,14 +17,9 @@ import RunningMockTest from './pages/RunningMockTest'
 import LongJumpMockTest from './pages/LongJumpMockTest'
 import JavelinMockTest from './pages/JavelinMockTest'
 import RelayMockTest from './pages/RelayMockTest'
-<<<<<<< HEAD
-import CoachRecipientPage from './pages/CoachRecipientPage'
-import YoloTestPerformance from './pages/YoloTestPerformance'
-=======
 import Athletes from './pages/Athletes'
 
 import toast, { Toaster } from 'react-hot-toast';
->>>>>>> 3e1acaebabcfe4b3e7b35ccbee417e4ac8e23f0c
 
 function App() {
 
@@ -50,12 +45,7 @@ function App() {
         <Route path='/LongJumpMockTest' element={<LongJumpMockTest/>}/>
         <Route path='/JavelinMockTest' element={<JavelinMockTest/>}/>
         <Route path='/RelayMockTest' element={<RelayMockTest/>}/>
-<<<<<<< HEAD
-        <Route path='/CoachRecipientPage' element={<CoachRecipientPage/>}/>
-        <Route path='/YoloTestPerformance' element={<YoloTestPerformance/>}/>
-=======
         <Route path='/athletes' element={<Athletes/>}/>
->>>>>>> 3e1acaebabcfe4b3e7b35ccbee417e4ac8e23f0c
       </Routes>
     </>
   )
