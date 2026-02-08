@@ -1,5 +1,6 @@
 import { validationResult } from "express-validator";
 import coachModel from "../models/coach.model.js";
+import { sendInvitation } from "../services/invitaionService.js";
 
 export const register = async (req, res) => {
   try {
@@ -85,7 +86,10 @@ export const loginCoach = async (req, res) => {
   }
 };
 
+<<<<<<< HEAD
+=======
 
+>>>>>>> 2ded9c3b101655f5ee7108280bc6335775ec67f9
 export const resetPassword = async (req, res) => {
   try {
     const { email, newPassword } = req.body;
@@ -112,7 +116,7 @@ export const sendInvitationToAthlete = async (req, res) => {
     }
 
     const { email } = req.body;
-    const loggedInUser = await Coach.findOne({ email: req.user.email });
+    const loggedInUser = await coachModel.findOne({ email: req.user.email });
     const invitedBy = loggedInUser._id.toString();
 
     const invitation = await sendInvitation(email, invitedBy);
@@ -133,7 +137,7 @@ export const removeDisciple = async (req, res) => {
       });
     }
 
-    const updatedCoach = await Coach.findByIdAndUpdate(
+    const updatedCoach = await coachModel.findByIdAndUpdate(
       coachId,
       {
         $pull: { disciples: athleteId },
@@ -154,6 +158,31 @@ export const removeDisciple = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: "Server error",
+      error: error.message,
+    });
+  }
+};
+
+export const profile = async (req, res) => {
+  try {
+    const coach = await coachModel
+      .findOne({ email: req.user.email })
+      .select("-password")
+      .populate("disciples", "-password");
+
+    if (!coach) {
+      return res.status(404).json({ message: "Coach not found" });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Profile fetched successfully",
+      data: coach,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch profile",
       error: error.message,
     });
   }

@@ -9,7 +9,7 @@ const practiceActivitySchema = new mongoose.Schema(
       trim: true,
     },
     duration: {
-      type: Number,
+      type: String,
       default: null,
       min: 0,
     },
@@ -36,6 +36,9 @@ const practiceSchema = new mongoose.Schema(
       required: true,
     },
     activities: [practiceActivitySchema],
+    note: {
+        type: String
+    }
   },
   { timestamps: true }
 );
