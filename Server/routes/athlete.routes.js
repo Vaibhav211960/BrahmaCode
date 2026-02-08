@@ -12,12 +12,16 @@ import {
   getAllInvitations,
   getAllAthletes,
   handleCoachInvitation,
+  profile,
+  getAthleteById,
 } from "../controllers/athlete.controller.js";
 
 import athleteMiddleware from "../middleware/athlete.middleware.js";
 =======
-import { register, loginAthlete, resetPassword } from "../controllers/athlete.controller.js";
->>>>>>> 4085d9d21c0de8746ad4548fe4fc682ed816d859
+import { register, loginAthlete, resetPassword , getAllAthletes } from "../controllers/athlete.controller.js";
+import athleteMiddleware from "../middleware/athlete.middleware.js";
+// import { handleCoachInvitation, getAllInvitations } from "../controllers/invitation.controller.js";
+>>>>>>> a96a4ca4eff7cefa461723750f71ce87ffa21b08
 
 router.post(
   "/register",
@@ -31,7 +35,7 @@ router.post(
   body("email").isEmail().withMessage("Invalid email address"),
   body("otp").notEmpty().withMessage("OTP is required"),
 =======
->>>>>>> 4085d9d21c0de8746ad4548fe4fc682ed816d859
+>>>>>>> a96a4ca4eff7cefa461723750f71ce87ffa21b08
   body("name").notEmpty().withMessage("Name is required"),
   body("password")
     .isLength({ min: 6 })
@@ -40,7 +44,7 @@ router.post(
   verifyOtpAndCompleteRegistration,
 =======
   register,
->>>>>>> 4085d9d21c0de8746ad4548fe4fc682ed816d859
+>>>>>>> a96a4ca4eff7cefa461723750f71ce87ffa21b08
 );
 
 router.post(
@@ -74,7 +78,7 @@ router.post(
 
 router.post(
 =======
->>>>>>> 4085d9d21c0de8746ad4548fe4fc682ed816d859
+>>>>>>> a96a4ca4eff7cefa461723750f71ce87ffa21b08
   "/reset-password",
   body("email").isEmail().withMessage("Invalid email address"),
   body("newPassword")
@@ -83,9 +87,22 @@ router.post(
   resetPassword,
 );
 
-router.post("/manage-invitation", athleteMiddleware, handleCoachInvitation);
+// router.post("/manage-invitation", athleteMiddleware, handleCoachInvitation);
 
+<<<<<<< HEAD
 router.post("/invitations", athleteMiddleware, getAllInvitations);
-export default router;
+
+router.get("/profile", athleteMiddleware, profile);
 
 router.get("/all", getAllAthletes);
+
+router.get("/:athleteId", getAthleteById);
+
+
+export default router;
+=======
+// router.post("/invitations", athleteMiddleware, getAllInvitations);
+router.get("/all", getAllAthletes);
+export default router;
+
+>>>>>>> a96a4ca4eff7cefa461723750f71ce87ffa21b08

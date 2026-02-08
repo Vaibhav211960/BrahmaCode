@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 =======
->>>>>>> 4085d9d21c0de8746ad4548fe4fc682ed816d859
+>>>>>>> a96a4ca4eff7cefa461723750f71ce87ffa21b08
 
 const coachModel = mongoose.Schema(
   {
@@ -89,7 +89,7 @@ const coachModel = mongoose.Schema(
 );
 
 
->>>>>>> 4085d9d21c0de8746ad4548fe4fc682ed816d859
+>>>>>>> a96a4ca4eff7cefa461723750f71ce87ffa21b08
 coachModel.pre("validate", function (next) {
   if (
     this.isNew &&
@@ -121,7 +121,7 @@ coachModel.methods.generateAuthToken = function () {
   const token = jwt.sign(
     { _id: this._id, email: this.email },
     process.env.JWT_SECRET,
->>>>>>> 4085d9d21c0de8746ad4548fe4fc682ed816d859
+>>>>>>> a96a4ca4eff7cefa461723750f71ce87ffa21b08
     { expiresIn: "3d" }
   );
   return token;

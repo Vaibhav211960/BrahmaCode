@@ -5,11 +5,9 @@ export const createRunningTest = async (req, res) => {
   
  try {
     const { athleteId, headPosition, armSwing, runningLine, footSound, faceExpression , score , date } = req.body;
-
-    // Simple Point Calculation Logic
    
     const newTest = await RunningTest.create({
-      athleteId: "69875bccbfb21ca0eab99ff8",
+      athleteId,
       headPosition,
       armSwing,
       runningLine,

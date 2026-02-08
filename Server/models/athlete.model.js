@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 =======
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
->>>>>>> 4085d9d21c0de8746ad4548fe4fc682ed816d859
+>>>>>>> a96a4ca4eff7cefa461723750f71ce87ffa21b08
 
 const athleteModel = new mongoose.Schema(
   {
@@ -27,7 +27,7 @@ const athleteModel = new mongoose.Schema(
     email: {
       type: String,
       requried: true,
->>>>>>> 4085d9d21c0de8746ad4548fe4fc682ed816d859
+>>>>>>> a96a4ca4eff7cefa461723750f71ce87ffa21b08
     },
     password: {
       type: String,
@@ -56,7 +56,7 @@ const athleteModel = new mongoose.Schema(
     age: {
       type: Number
     }
->>>>>>> 4085d9d21c0de8746ad4548fe4fc682ed816d859
+>>>>>>> a96a4ca4eff7cefa461723750f71ce87ffa21b08
   },
   { timestamps: true },
 );

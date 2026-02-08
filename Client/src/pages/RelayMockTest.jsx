@@ -5,6 +5,7 @@ import {
   GitBranch, Repeat, Save, Loader2
 } from 'lucide-react';
 import axios from 'axios';
+import { useLocation } from 'react-router-dom';
 
 const RelayMockTest = () => {
   // athleteId should come from your auth state/params
@@ -18,6 +19,9 @@ const RelayMockTest = () => {
     legMuscleTightness: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const location = useLocation();
+  const { athlete } = location.state || {};
 
   const handleTechniqueChange = (check, value) => {
     setTechniqueChecks(prev => ({ ...prev, [check]: value }));
@@ -47,7 +51,7 @@ const RelayMockTest = () => {
     try {
       const token = localStorage.getItem('token');
       const payload = {
-        athleteId,
+        athleteId: athlete._id,
         accelerationDistance: techniqueChecks.accelerationDistance,
         batonExchange: techniqueChecks.batonExchange,
         armAngle: techniqueChecks.armAngle,

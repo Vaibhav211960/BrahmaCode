@@ -19,6 +19,10 @@ const JavelinMockTest = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const location = useLocation();
+  const { athlete } = location.state || {};
+
+
   const handleTechniqueChange = (check, value) => {
     setTechniqueChecks(prev => ({ ...prev, [check]: value }));
   };
@@ -36,7 +40,7 @@ const JavelinMockTest = () => {
     try {
       const token = localStorage.getItem('token');
       const payload = {
-        athleteId,
+        athleteId: athlete._id,
         elbowAtThrow: techniqueChecks.elbowAtThrow,
         bodyRotation: techniqueChecks.bodyRotation,
         throwCount: parseInt(techniqueChecks.throwCount),

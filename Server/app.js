@@ -47,16 +47,19 @@ import RunningRoutes from "./routes/running.routes.js"
 import LongJumpRoutes from "./routes/longJump.routes.js"
 import JevelineRoutes from "./routes/jeveline.routes.js"
 import RelayRoutes from "./routes/relay.routes.js"
-
+import PracticeRoutes from "./routes/practice.routes.js"
+import authRoutes from "./routes/auth.routes.js"
 
 app.use("/api/athlete", AthleteRoutes)
 app.use("/api/coaches", CoachRoutes)
-<<<<<<< HEAD
-=======
 app.use("/api/running", RunningRoutes)
 app.use("/api/long-jump", LongJumpRoutes)
 app.use("/api/javelin", JevelineRoutes);
 app.use("/api/relay", RelayRoutes)
->>>>>>> 4085d9d21c0de8746ad4548fe4fc682ed816d859
+<<<<<<< HEAD
+app.use("/practice", PracticeRoutes)
+app.use("/api/auth", authRoutes)
+=======
+>>>>>>> a96a4ca4eff7cefa461723750f71ce87ffa21b08
 
 export default app;
