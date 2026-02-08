@@ -116,17 +116,6 @@ const AthleteDashboard = () => {
   };
 
   return (
-<<<<<<< HEAD
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 md:p-6 font-sans">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 relative">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
-              Athlete Dashboard
-            </h1>
-            <p className="text-gray-600 mt-2">Track your performance metrics and test history</p>
-=======
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50 p-6 md:p-10 font-sans">
       <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-8">
         
@@ -179,7 +168,6 @@ const AthleteDashboard = () => {
             >
               <LogOut size={18} /> Logout Session
             </button>
->>>>>>> 496a3b4ff67538108f04b49f0cb42155cec32e77
           </div>
           <div className="flex items-center gap-3">
             {/* Notification Button with Dropdown */}
@@ -286,7 +274,7 @@ const AthleteDashboard = () => {
               Edit Profile
             </button>
           </div>
-        </div>
+        </aside>
 
         <div className="grid lg:grid-cols-3 gap-6">
           {/* Left Column - Profile & Quick Stats */}
