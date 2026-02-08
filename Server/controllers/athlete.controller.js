@@ -198,3 +198,44 @@ export const getAthleteById = async(req, res) => {
     });
   }
 };
+
+export const updateProfile = async (req, res) => {
+  try {
+    const { name, email, sport, specialization, age, height, weight, bio } = req.body;
+    
+    const athlete = await Athlete.findOne({ email: req.user.email });
+    if (!athlete) {
+      return res.status(404).json({ message: "Athlete not found" });
+    }
+
+    // Update profile fields
+    if (name) athlete.name = name;
+    if (email && email !== athlete.email) {
+      const existingUser = await Athlete.findOne({ email });
+      if (existingUser) {
+        return res.status(400).json({ message: "Email already in use" });
+      }
+      athlete.email = email;
+    }
+    if (sport) athlete.sport = sport;
+    if (specialization) athlete.specialization = specialization;
+    if (age) athlete.age = age;
+    if (height) athlete.height = height;
+    if (weight) athlete.weight = weight;
+    if (bio) athlete.bio = bio;
+
+    await athlete.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Profile updated successfully",
+      data: athlete,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to update profile",
+      error: error.message,
+    });
+  }
+};

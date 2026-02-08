@@ -287,22 +287,58 @@ const YoloTestPerformance = () => {
     }));
   };
 
-  const handleSaveAll = () => {
-    setLoading(true);
-    
-    // Simulate API call to save data
-    setTimeout(() => {
-      const dataToSave = {
-        athletePerformance,
-        taskScores,
-        overallScore,
-        timestamp: new Date().toISOString()
+  const handleSaveAll = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem('token');
+
+      // Get athlete profile to get athleteId
+      const athleteRes = await axios.get(
+        'http://localhost:3000/api/athlete/profile',
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      const athleteId = athleteRes.data.data._id;
+      const age = athleteRes.data.data.age || 19;
+      const gender = athleteRes.data.data.gender || 'male';
+
+      // Map performance data from frontend to backend field names
+      const payload = {
+        athleteId,
+        age,
+        gender,
+        beepTest: athletePerformance.yoyo_endurance || 0,
+        verticalJump: athletePerformance.vertical_jump || 0,
+        broadJump: athletePerformance.broad_jump || 0,
+        sprintTime: athletePerformance.sprint_40m || 0,
+        agilityTtest: athletePerformance.agility_ttest || 0,
+        reactionTime: athletePerformance.reaction_time || 0,
+        benchPress: athletePerformance.bench_press || 0,
+        sitAndReach: athletePerformance.sit_reach || 0,
+        wallSit: athletePerformance.plank_hold || 0,
+        cooperTest: athletePerformance.hand_grip || 0,
+        // Default values for admin fields
+        ankleDorsiflexion: 0,
+        singleLegBalance: 0,
       };
-      
-      console.log('Saving YOLO test data:', dataToSave);
-      alert('YOLO Test results saved successfully!');
+
+      const response = await axios.post(
+        'http://localhost:3000/api/yolo/create',
+        payload,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      if (response.data) {
+        toast.success('YOLO Test results saved successfully!');
+        setTimeout(() => {
+          navigate('/athlete-dashboard');
+        }, 1500);
+      }
+    } catch (error) {
+      console.error('Error saving YOLO test:', error);
+      toast.error(error.response?.data?.message || 'Failed to save YOLO test results');
+    } finally {
       setLoading(false);
-    }, 1500);
+    }
   };
 
   const handleExportResults = () => {

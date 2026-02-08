@@ -24,6 +24,10 @@ const athleteModel = new mongoose.Schema(
       type: String,
       required: true,
     },
+    specialization: {
+      type: String,
+      default: "",
+    },
     history: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "AthleteHistory",

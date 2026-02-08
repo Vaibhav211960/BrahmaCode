@@ -53,11 +53,29 @@ const CoachDashboard = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
+        setPracticesLoading(true);
         const token = localStorage.getItem('token');
+
+        // Fetch all athletes
         const res = await axios.get("http://localhost:3000/api/athlete/all", {
           headers: { Authorization: `Bearer ${token}` }
         });
         setAthletes(res.data.data);
+
+        // Fetch coach profile to get coachId
+        const coachProfileRes = await axios.get("http://localhost:3000/api/coaches/profile", {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        const coachId = coachProfileRes.data.data._id;
+
+        // Fetch practices for this coach
+        const practicesRes = await axios.get(
+          `http://localhost:3000/api/practice/get?coachId=${coachId}`,
+          {
+            headers: { Authorization: `Bearer ${token}` }
+          }
+        );
+        setAssignedPractices(practicesRes.data.data || []);
         setError(null);
       } catch (err) {
         console.error("Fetch Error:", err);
@@ -144,6 +162,29 @@ const CoachDashboard = () => {
           duration: "",
           notes: "",
         });
+        
+        // Refetch practices to show the newly assigned practice
+        try {
+          const token = localStorage.getItem("token");
+          const coachRes = await axios.get(
+            "http://localhost:3000/api/coaches/profile",
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            },
+          );
+          const coachId = coachRes.data.data._id;
+
+          const practicesRes = await axios.get(
+            `http://localhost:3000/api/practice/get?coachId=${coachId}`,
+            {
+              headers: { Authorization: `Bearer ${token}` }
+            }
+          );
+          setAssignedPractices(practicesRes.data.data || []);
+        } catch (err) {
+          console.error("Error refetching practices:", err);
+        }
+        
         setActiveTab("overview");
       }
     } catch (err) {

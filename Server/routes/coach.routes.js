@@ -1,7 +1,8 @@
 import express from "express"
 const router = express.Router()
 import {body} from "express-validator"
-import { register, loginCoach, resetPassword} from "../controllers/coach.controller.js"
+import { register, loginCoach, resetPassword, profile, updateProfile, sendInvitationToAthlete, removeDisciple } from "../controllers/coach.controller.js"
+import coachMiddleware from "../middleware/coach.middleware.js"
 
 router.post("/register",
   body("email").isEmail().withMessage("Invalid email address"),
@@ -26,8 +27,12 @@ router.post("/reset-password",
   resetPassword,
 );
 
-// router.put("/add-athlete", coachMiddleware, sendInvitationToAthlete);
+router.get("/profile", coachMiddleware, profile);
 
-// router.put("/disciple/remove", removeDisciple);
+router.put("/profile", coachMiddleware, updateProfile);
+
+router.put("/add-athlete", coachMiddleware, body("email").isEmail().withMessage("Invalid email address"), sendInvitationToAthlete);
+
+router.put("/disciple/remove", coachMiddleware, removeDisciple);
 
 export default router;

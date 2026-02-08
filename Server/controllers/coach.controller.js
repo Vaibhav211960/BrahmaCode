@@ -185,3 +185,44 @@ export const profile = async (req, res) => {
     });
   }
 };
+
+export const updateProfile = async (req, res) => {
+  try {
+    const { name, email, category, level, yearOfExp, education, coachInstitute, bio } = req.body;
+    
+    const coach = await coachModel.findOne({ email: req.user.email });
+    if (!coach) {
+      return res.status(404).json({ message: "Coach not found" });
+    }
+
+    // Update profile fields
+    if (name) coach.name = name;
+    if (email && email !== coach.email) {
+      const existingUser = await coachModel.findOne({ email });
+      if (existingUser) {
+        return res.status(400).json({ message: "Email already in use" });
+      }
+      coach.email = email;
+    }
+    if (category) coach.category = category;
+    if (level) coach.level = level;
+    if (yearOfExp) coach.yearOfExp = yearOfExp;
+    if (education) coach.education = education;
+    if (coachInstitute) coach.coachInstitute = coachInstitute;
+    if (bio) coach.bio = bio;
+
+    await coach.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Profile updated successfully",
+      data: coach,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to update profile",
+      error: error.message,
+    });
+  }
+};

@@ -40,6 +40,8 @@ const AthleteDashboard = () => {
   });
 
   const [yoYoTestHistory, setYoYoTestHistory] = useState([]);
+  const [assignedPractices, setAssignedPractices] = useState([]);
+  const [practicesLoading, setPracticesLoading] = useState(false);
 
   const [technicalTestHistory] = useState([
     { test: "Reaction Time", date: "2024-02-09", score: "0.148s", status: "Elite" },
@@ -58,6 +60,18 @@ const AthleteDashboard = () => {
 
   const [showCoachInvitations, setShowCoachInvitations] = useState(false);
   const [coachInvitations, setCoachInvitation] = useState([]);
+  const [isEditing, setIsEditing] = useState(false);
+  const [profileLoading, setProfileLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    sport: "",
+    specialization: "",
+    age: "",
+    height: "",
+    weight: "",
+    bio: "",
+  });
 
   useEffect(() => {
     const fetchAthleteData = async () => {
@@ -75,8 +89,53 @@ const AthleteDashboard = () => {
           },
         );
         setCoachInvitation(invRes.data);
+
+        // Fetch athlete profile and then YOLO tests
+        const athleteRes = await axios.get(
+          "http://localhost:3000/api/athlete/profile",
+          {
+            headers: {
+              Authorization: token,
+            },
+          },
+        );
+        const athleteId = athleteRes.data.data._id;
+
+        // Fetch YOLO test history
+        const yoloRes = await axios.get(
+          `http://localhost:3000/api/yolo/get/${athleteId}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          },
+        );
+
+        if (yoloRes.data.data && yoloRes.data.data.length > 0) {
+          const formattedTests = yoloRes.data.data.map((test) => ({
+            date: new Date(test.createdAt).toLocaleDateString(),
+            score: test.beepTest?.value || 0,
+            level: test.beepTest?.label || "Average",
+            trend: "+0",
+          }));
+          setYoYoTestHistory(formattedTests);
+        }
+
+        // Fetch assigned practices for this athlete
+        setPracticesLoading(true);
+        const practicesRes = await axios.get(
+          `http://localhost:3000/api/practice/get?athleteId=${athleteId}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          },
+        );
+        setAssignedPractices(practicesRes.data.data || []);
       } catch (error) {
-        console.error("Error fetching invitations:", error);
+        console.error("Error fetching data:", error);
+      } finally {
+        setPracticesLoading(false);
       }
     };
 
@@ -88,14 +147,88 @@ const AthleteDashboard = () => {
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside)
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
   const handleLogout = () => navigate("/login");
-  const handleEditProfile = () => console.log("Edit profile clicked");
+
+  const handleEditProfile = () => {
+    setFormData({
+      name: athlete.name,
+      email: athlete.email || "",
+      sport: athlete.sport,
+      specialization: athlete.specialization,
+      age: athlete.age?.toString() || "",
+      height: athlete.height || "",
+      weight: athlete.weight || "",
+      bio: athlete.bio || "",
+    });
+    setIsEditing(true);
+  };
+
+  const handleProfileChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleProfileSave = async (e) => {
+    e.preventDefault();
+    try {
+      setProfileLoading(true);
+      const token = localStorage.getItem("token");
+
+      const response = await axios.put(
+        "http://localhost:3000/api/athlete/profile",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.data) {
+        setAthlete((prev) => ({
+          ...prev,
+          name: formData.name,
+          email: formData.email,
+          sport: formData.sport,
+          specialization: formData.specialization,
+          age: parseInt(formData.age),
+          height: formData.height,
+          weight: formData.weight,
+          bio: formData.bio,
+        }));
+        toast.success("Profile updated successfully!");
+        setIsEditing(false);
+      }
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      toast.error(error.response?.data?.message || "Failed to update profile");
+    } finally {
+      setProfileLoading(false);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    setFormData({
+      name: "",
+      email: "",
+      sport: "",
+      specialization: "",
+      age: "",
+      height: "",
+      weight: "",
+      bio: "",
+    });
+  };
 
   const handleAcceptInvitation = (invitationId) => {
     axios
@@ -272,11 +405,167 @@ const AthleteDashboard = () => {
                   <p className="font-bold text-gray-800">{athlete.bmi}</p>
                 </div>
               </div>
-              <button onClick={handleLogout} className="w-full mt-8 flex items-center justify-center gap-2 py-4 bg-gray-50 hover:bg-red-50 text-gray-500 hover:text-red-600 rounded-2xl font-black text-xs uppercase transition-all">
-                <LogOut size={18} /> Logout Session
-              </button>
             </div>
           </aside>
+
+          {/* Edit Profile Modal */}
+          {isEditing && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 font-sans">
+              <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+                {/* Modal Header */}
+                <div className="sticky top-0 bg-gradient-to-r from-blue-600 to-blue-700 p-6 flex items-center justify-between rounded-t-3xl">
+                  <h2 className="text-2xl font-black text-white">Edit Profile</h2>
+                  <button
+                    onClick={handleCancelEdit}
+                    className="text-white hover:bg-blue-800 p-2 rounded-lg transition-all"
+                  >
+                    <X className="w-6 h-6" />
+                  </button>
+                </div>
+
+                {/* Modal Body */}
+                <form onSubmit={handleProfileSave} className="p-6 space-y-4">
+                  {/* Name */}
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-2">
+                      Full Name
+                    </label>
+                    <input
+                      type="text"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleProfileChange}
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-600 focus:outline-none font-medium"
+                      placeholder="Enter your name"
+                    />
+                  </div>
+
+                  {/* Email */}
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-2">
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleProfileChange}
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-600 focus:outline-none font-medium"
+                      placeholder="Enter your email"
+                    />
+                  </div>
+
+                  {/* Sport */}
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-2">
+                      Sport
+                    </label>
+                    <input
+                      type="text"
+                      name="sport"
+                      value={formData.sport}
+                      onChange={handleProfileChange}
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-600 focus:outline-none font-medium"
+                      placeholder="e.g., Track & Field"
+                    />
+                  </div>
+
+                  {/* Specialization */}
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-2">
+                      Specialization
+                    </label>
+                    <input
+                      type="text"
+                      name="specialization"
+                      value={formData.specialization}
+                      onChange={handleProfileChange}
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-600 focus:outline-none font-medium"
+                      placeholder="e.g., 100m Sprint"
+                    />
+                  </div>
+
+                  {/* Age */}
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-2">
+                      Age
+                    </label>
+                    <input
+                      type="number"
+                      name="age"
+                      value={formData.age}
+                      onChange={handleProfileChange}
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-600 focus:outline-none font-medium"
+                      placeholder="Enter your age"
+                    />
+                  </div>
+
+                  {/* Height */}
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-2">
+                      Height
+                    </label>
+                    <input
+                      type="text"
+                      name="height"
+                      value={formData.height}
+                      onChange={handleProfileChange}
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-600 focus:outline-none font-medium"
+                      placeholder="e.g., 182 cm"
+                    />
+                  </div>
+
+                  {/* Weight */}
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-2">
+                      Weight
+                    </label>
+                    <input
+                      type="text"
+                      name="weight"
+                      value={formData.weight}
+                      onChange={handleProfileChange}
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-600 focus:outline-none font-medium"
+                      placeholder="e.g., 75 kg"
+                    />
+                  </div>
+
+                  {/* Bio */}
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-2">
+                      Bio
+                    </label>
+                    <textarea
+                      name="bio"
+                      value={formData.bio}
+                      onChange={handleProfileChange}
+                      rows="3"
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-600 focus:outline-none font-medium resize-none"
+                      placeholder="Tell us about yourself..."
+                    />
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex gap-3 pt-4">
+                    <button
+                      type="button"
+                      onClick={handleCancelEdit}
+                      className="flex-1 px-4 py-3 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200 transition-all"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={profileLoading}
+                      className="flex-1 px-4 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-all disabled:opacity-50"
+                    >
+                      {profileLoading ? "Saving..." : "Save Changes"}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
 
           {/* Main Content Area */}
           <div className="flex-1 space-y-6">
@@ -328,8 +617,67 @@ const AthleteDashboard = () => {
               </div>
             </div>
 
-            {/* Yo-Yo Test History Table */}
+            {/* Assigned Practices / Drills */}
             <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
+                  <Activity className="w-5 h-5 text-blue-600" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-gray-900">Assigned Drills</h3>
+                  <p className="text-sm text-gray-600">Tasks from your coaches</p>
+                </div>
+              </div>
+              {practicesLoading ? (
+                <div className="text-center py-12">
+                  <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                  <p className="text-gray-600 font-medium mt-4">Loading drills...</p>
+                </div>
+              ) : assignedPractices && assignedPractices.length > 0 ? (
+                <div className="space-y-3">
+                  {assignedPractices.map((practice) => (
+                    <div key={practice._id} className="flex items-start gap-4 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl hover:shadow-md transition-shadow border border-blue-100">
+                      <div className="w-12 h-12 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0">
+                        <Activity className="w-5 h-5" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-bold text-gray-900">{practice.activityName}</p>
+                        <p className="text-xs text-gray-600 mt-1">
+                          Coach: <span className="font-semibold text-blue-600">{practice.coachId?.name || 'Your Coach'}</span>
+                        </p>
+                        {practice.duration && (
+                          <p className="text-xs text-gray-500 mt-1">
+                            Duration: {practice.duration}
+                          </p>
+                        )}
+                        {practice.note && (
+                          <p className="text-xs text-gray-600 mt-2 italic">
+                            "{practice.note}"
+                          </p>
+                        )}
+                      </div>
+                      <div className="text-right flex-shrink-0">
+                        <p className="text-xs font-bold text-gray-400">
+                          {new Date(practice.createdAt).toLocaleDateString()}
+                        </p>
+                        <span className="inline-block mt-2 px-3 py-1 bg-blue-500 text-white text-xs font-bold rounded-full">
+                          Active
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12">
+                  <Activity className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+                  <p className="text-gray-600 font-medium">No drills assigned yet</p>
+                  <p className="text-sm text-gray-500 mt-1">Accept a coach invitation to receive drills</p>
+                </div>
+              )}
+            </div>
+
+            {/* Yo-Yo Test History Table */}
+            {/* <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
                   <Activity className="w-5 h-5 text-blue-600" />
@@ -363,7 +711,7 @@ const AthleteDashboard = () => {
                   </tbody>
                 </table>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

@@ -1,9 +1,6 @@
 import mongoose from "mongoose";
-<<<<<<< HEAD
-=======
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
->>>>>>> fd0350cde5a792317c85ac75d74682bcfa76cbd4
 
 const coachModel = mongoose.Schema(
   {
@@ -37,6 +34,10 @@ const coachModel = mongoose.Schema(
     },
     coachInstitute: {
         type: "String"
+    },
+    bio: {
+        type: "String",
+        default: ""
     }
   },
   { timestamps: true },

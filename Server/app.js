@@ -57,5 +57,7 @@ app.use("/api/running", RunningRoutes)
 app.use("/api/long-jump", LongJumpRoutes)
 app.use("/api/javelin", JevelineRoutes);
 app.use("/api/relay", RelayRoutes)
+app.use("/api/yolo", YoloRoutes)
+app.use("/api/practice", PracticeRoutes)
 
 export default app;

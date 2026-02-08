@@ -41,6 +41,9 @@ const yoloSchema = new mongoose.Schema(
     beepTest: metricSchema,
     wallSit: metricSchema,
     cooperTest: metricSchema,
+    reactionTime: metricSchema,
+    benchPress: metricSchema,
+    sitAndReach: metricSchema,
   },
   { timestamps: true },
 );
