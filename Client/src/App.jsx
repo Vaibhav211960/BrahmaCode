@@ -25,7 +25,7 @@ function App() {
 
   return (
     <>
-      <Toaster />
+      {/* <Toaster /> */}
       <NavBar />
       <Routes>
         <Route path='/' element={<Home />} />
