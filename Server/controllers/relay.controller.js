@@ -5,7 +5,7 @@ export const createRelayTest = async (req, res) => {
   
   try {
     const {
-      athleteId,
+      athleteId = "69875bccbfb21ca0eab99ff8",
       accelerationDistance,
       armAngle,
       batonExchange,
@@ -63,7 +63,7 @@ export const createRelayTest = async (req, res) => {
 
 export const getRelayScore = async (req, res) => {
   try {
-    const { athleteId } = req.params;
+    const { athleteId  } = req.params;
     const test = await Relay.findOne({ athleteId }).sort({ createdAt: -1 });
 
     if (!test) return res.status(404).json({ message: "No relay records found" });
@@ -84,8 +84,8 @@ export const getRelayWeakness = async (req, res) => {
     const weaknesses = [];
     // Ensure these strings ("Incorrect") match exactly how they are saved in createRelayTest
     if (test.batonExchange === "Incorrect") weaknesses.push("Baton Handoff Mechanics");
-    if (test.timing === "Incorrect") weaknesses.push("Runner Synchronization");
-    if (test.zoneExecution === "Incorrect") weaknesses.push("Exchange Zone Utilization");
+    if (test.legMuscleTightness === "Incorrect") weaknesses.push("Runner Synchronization");
+    if (test.accelerationDistance === "Incorrect") weaknesses.push("Acceleration Zone Execution");
 
     res.status(200).json({ 
       athleteId, 

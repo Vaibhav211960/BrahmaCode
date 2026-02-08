@@ -86,6 +86,10 @@ export const loginCoach = async (req, res) => {
   }
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 2ded9c3b101655f5ee7108280bc6335775ec67f9
 export const resetPassword = async (req, res) => {
   try {
     const { email, newPassword } = req.body;
