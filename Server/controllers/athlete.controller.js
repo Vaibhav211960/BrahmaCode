@@ -154,6 +154,7 @@ export const getAllAthletes = async (req, res) => {
 };
 
 export const profile = async(req, res) => {
+
   try {
     const athlete = await Athlete.findOne({ email: req.user.email }).select("-password");
     

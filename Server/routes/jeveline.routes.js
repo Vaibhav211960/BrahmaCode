@@ -8,7 +8,7 @@ import {
 const router = express.Router();
 
 router.post("/create", createJevelineTest);
-router.get("/jeveline/weakness/:athleteId", getJevelineWeakness);
+router.get("/weakness/:athleteId", getJevelineWeakness);
 // router.get("/jeveline/injury-risk/:athleteId", getJevelineInjuryRisk);
 router.get("/get/:athleteId", getJevelineScore);
 

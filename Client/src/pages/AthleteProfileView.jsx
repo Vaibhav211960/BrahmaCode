@@ -201,22 +201,10 @@ const AthleteProfileView = () => {
               </h3>
               <div className="grid md:grid-cols-2 gap-6">
                 <MetricCard
-                  label="Readiness"
-                  value={athlete.readiness || "85"}
-                  unit="%"
-                  color="blue"  
-                />
-                <MetricCard
                   label="BMI"
                   value={athlete.bmi || "22.5"}
                   unit=""
                   color="emerald"
-                />
-                <MetricCard
-                  label="Specialization"
-                  value={athlete.specialization || "General"}
-                  unit=""
-                  color="purple"
                 />
                 <MetricCard
                   label="Aerobic Score"

@@ -12,8 +12,8 @@ const router = express.Router();
 router.post("/create", createRunningTest); 
 
 // Athlete-specific data retrieval
-router.get("/running-test/weakness/:athleteId", getRunningWeakness);
-router.get("/running-test/injury-risk/:athleteId", getRunningInjuryRisk);
-router.get("/running-test/score/:athleteId", getRunningScore);
+router.get("/weakness/:athleteId", getRunningWeakness);
+router.get("/injury-risk/:athleteId", getRunningInjuryRisk);
+router.get("/score/:athleteId", getRunningScore);
 
 export default router;

@@ -9,7 +9,7 @@ import {
 } from "../controllers/relay.controller.js";
 
 router.post("/create", createRelayTest);
-router.get("/relay/weakness/:athleteId", getRelayWeakness);
+router.get("/weakness/:athleteId", getRelayWeakness);
 // router.get("/relay/injury-risk/:athleteId", getRelayInjuryRisk);
 router.get("/get/:athleteId", getRelayScore);
 

@@ -1,11 +1,7 @@
 import express from "express";
 const router = express.Router();
 import { body } from "express-validator";
-<<<<<<< HEAD
-import { register, loginAthlete, resetPassword , getAllAthletes, profile, getAthleteById, updateProfile } from "../controllers/athlete.controller.js";
-=======
 import { register, loginAthlete, resetPassword , getAllAthletes, profile, getAthleteById } from "../controllers/athlete.controller.js";
->>>>>>> f8765537873156f350c7a84854d1bdff3ec263be
 import athleteMiddleware from "../middleware/athlete.middleware.js";
 // import { handleCoachInvitation, getAllInvitations } from "../controllers/invitation.controller.js";
 
@@ -38,8 +34,8 @@ router.post(
 );
 
 router.get("/profile", athleteMiddleware, profile);
-
-router.put("/profile", athleteMiddleware, updateProfile);
+  
+// router.put("/profile", athleteMiddleware, updateProfile);
 
 router.get("/all", getAllAthletes);
 

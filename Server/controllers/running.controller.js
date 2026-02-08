@@ -48,7 +48,7 @@ export const getRunningScore = async (req, res) => {
 
     res.status(200).json({
       athleteId,
-      score,
+      totalScore,
       maxScore: 100,
       grade:
         score >= 80 ? "Excellent" :

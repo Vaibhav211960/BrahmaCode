@@ -10,7 +10,7 @@ import {
 } from "../controllers/longJump.controller.js"
 
 router.post("/create", createLongJumpTest);
-router.get("/longjump/weakness/:athleteId", getLongJumpWeakness);
+router.get("/weakness/:athleteId", getLongJumpWeakness);
 // router.get("/longjump/injury-risk/:athleteId", getLongJumpInjuryRisk);
 router.get("/get/:athleteId", getLongJumpScore);
 
