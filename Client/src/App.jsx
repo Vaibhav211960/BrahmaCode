@@ -11,6 +11,7 @@ import OtpVerification from "./pages/OtpVerification"
 import ResetPassword from "./pages/ResetPassword"
 import CoachDashboard from './pages/CoachDashboard';
 import AthleteDashboard from './pages/AthleteDashboard'
+import AthleteProfileView from './pages/AthleteProfileView'
 import YoloTestForm from './pages/YoloTestForm'
 import RunningMockTest from './pages/RunningMockTest'
 import LongJumpMockTest from './pages/LongJumpMockTest'
@@ -38,6 +39,7 @@ function App() {
         <Route path='/reset-password' element={<ResetPassword />} />
         <Route path='/coach-dashboard' element={<CoachDashboard />} />
         <Route path='/athlete-dashboard' element={<AthleteDashboard />} />
+        <Route path='/athlete-profile/:athleteId' element={<AthleteProfileView />} />
         <Route path='/YoloTestForm' element={<YoloTestForm/>}/>
         <Route path='/RunningMockTest' element={<RunningMockTest/>}/>
         <Route path='/LongJumpMockTest' element={<LongJumpMockTest/>}/>

@@ -5,6 +5,8 @@ import {
   TargetIcon, Wind, Footprints, Save, Loader2 
 } from 'lucide-react';
 import axios from 'axios';
+import { useLocation } from 'react-router-dom';
+
 
 const LongJumpMockTest = () => {
   // athleteId should ideally come from useParams or global state
@@ -17,6 +19,9 @@ const LongJumpMockTest = () => {
     balanceAfterLanding: '',
     repeatedFouls: '0' // Number based on controller logic
   });
+  const location = useLocation();
+  const { athlete } = location.state || {};
+
   
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -37,6 +42,7 @@ const LongJumpMockTest = () => {
     try {
       const token = localStorage.getItem('token');
       const payload = {
+        athleteId: athlete._id,
         takeOffFoot: techniqueChecks.takeOffFoot,
         speedBeforeBoard: techniqueChecks.speedBeforeBoard,
         kneeAtLanding: techniqueChecks.kneeAtLanding,

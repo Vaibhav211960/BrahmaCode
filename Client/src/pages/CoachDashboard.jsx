@@ -38,7 +38,6 @@ const CoachDashboard = () => {
         setAthletes(res.data.data);
         console.log(res.data.data);
         
-        // Assuming response is the array of athletes
         setError(null);
       } catch (err) {
         console.error("Fetch Error:", err);
@@ -184,7 +183,10 @@ const CoachDashboard = () => {
                         }`}>{a.status || 'Active'}</span>
                       </td>
                       <td className="px-8 py-6">
-                        <button className="flex items-center gap-2 text-xs font-black text-blue-600 uppercase tracking-widest group-hover:translate-x-1 transition-transform">
+                        <button
+                          onClick={() => navigate(`/athlete-profile/${a._id}`)}
+                          className="flex items-center gap-2 text-xs font-black text-blue-600 uppercase tracking-widest group-hover:translate-x-1 transition-transform hover:text-blue-700"
+                        >
                           Analyze <ChevronRight size={14} />
                         </button>
                       </td>
