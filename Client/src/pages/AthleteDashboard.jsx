@@ -116,7 +116,6 @@ const AthleteDashboard = () => {
   };
 
   return (
-<<<<<<< HEAD
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 md:p-6 font-sans">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
@@ -126,60 +125,6 @@ const AthleteDashboard = () => {
               Athlete Dashboard
             </h1>
             <p className="text-gray-600 mt-2">Track your performance metrics and test history</p>
-=======
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50 p-6 md:p-10 font-sans">
-      <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-8">
-        
-        <aside className="w-full lg:w-80 space-y-6">
-          <div className="bg-white rounded-[2.5rem] shadow-2xl shadow-blue-100/50 p-8 border border-gray-100 text-center">
-            <div className="relative inline-block mb-6">
-              <img 
-                src={athlete.img} 
-                alt="Athlete" 
-                className="w-32 h-32 rounded-3xl object-cover border-4 border-white shadow-xl"
-              />
-              <div className="absolute -bottom-2 -right-2 bg-emerald-500 text-white p-2 rounded-xl shadow-lg border-2 border-white">
-                <Trophy size={16} />
-              </div>
-            </div>
-            
-            <h2 className="text-2xl font-black text-gray-900 mb-1">{athlete.name}</h2>
-            <p className="text-sm font-bold text-blue-600 uppercase tracking-widest mb-6">
-              {athlete.sport} • {athlete.position}
-            </p>
-
-            <div className={`py-2 px-4 rounded-xl inline-block text-xs font-black uppercase tracking-widest border-2 ${
-              athlete.readiness > 80 ? 'bg-emerald-50 border-emerald-100 text-emerald-600' : 'bg-red-50 border-red-100 text-red-600'
-            }`}>
-              {athlete.readiness > 80 ? 'Ready to Train' : 'Recovery Needed'}
-            </div>
-
-            <div className="grid grid-cols-2 gap-4 mt-8">
-              <div className="p-3 bg-gray-50 rounded-2xl border border-gray-100">
-                <p className="text-[10px] font-black text-gray-400 uppercase">Height</p>
-                <p className="font-bold text-gray-800">182cm</p>
-              </div>
-              <div className="p-3 bg-gray-50 rounded-2xl border border-gray-100">
-                <p className="text-[10px] font-black text-gray-400 uppercase">Weight</p>
-                <p className="font-bold text-gray-800">75kg</p>
-              </div>
-              <div className="p-3 bg-gray-50 rounded-2xl border border-gray-100">
-                <p className="text-[10px] font-black text-gray-400 uppercase">Age</p>
-                <p className="font-bold text-gray-800">19</p>
-              </div>
-              <div className="p-3 bg-gray-50 rounded-2xl border border-gray-100">
-                <p className="text-[10px] font-black text-gray-400 uppercase">BMI</p>
-                <p className="font-bold text-gray-800">22.6</p>
-              </div>
-            </div>
-
-            <button 
-              onClick={handleLogout}
-              className="w-full mt-8 flex items-center justify-center gap-2 py-4 bg-gray-50 hover:bg-red-50 text-gray-500 hover:text-red-600 rounded-2xl font-black text-xs uppercase transition-all duration-300 border border-gray-100"
-            >
-              <LogOut size={18} /> Logout Session
-            </button>
->>>>>>> 496a3b4ff67538108f04b49f0cb42155cec32e77
           </div>
           <div className="flex items-center gap-3">
             {/* Notification Button with Dropdown */}

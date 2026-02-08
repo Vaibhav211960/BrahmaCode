@@ -29,7 +29,7 @@ const YoloTestPerformance = () => {
       description: 'Incremental shuttle run test for aerobic capacity',
       backendStandard: 18.5,
       category: 'Endurance',
-      icon: <Activity className="w-5 h-5" />
+      iconType: 'Activity'
     },
     {
       id: 2,
@@ -39,7 +39,7 @@ const YoloTestPerformance = () => {
       description: 'Maximum vertical leap height',
       backendStandard: 55,
       category: 'Power',
-      icon: <Zap className="w-5 h-5" />
+      iconType: 'Zap'
     },
     {
       id: 3,
@@ -49,7 +49,7 @@ const YoloTestPerformance = () => {
       description: 'Horizontal jump distance from standing',
       backendStandard: 2.3,
       category: 'Power',
-      icon: <Flag className="w-5 h-5" />
+      iconType: 'Flag'
     },
     {
       id: 4,
@@ -59,7 +59,7 @@ const YoloTestPerformance = () => {
       description: 'Timed 40-meter sprint',
       backendStandard: 5.2,
       category: 'Speed',
-      icon: <Clock className="w-5 h-5" />
+      iconType: 'Clock'
     },
     {
       id: 5,
@@ -69,7 +69,7 @@ const YoloTestPerformance = () => {
       description: 'Agility and change of direction',
       backendStandard: 10.5,
       category: 'Agility',
-      icon: <Target className="w-5 h-5" />
+      iconType: 'Target'
     },
     {
       id: 6,
@@ -79,7 +79,7 @@ const YoloTestPerformance = () => {
       description: 'Visual stimulus response time',
       backendStandard: 200,
       category: 'Reaction',
-      icon: <Shield className="w-5 h-5" />
+      iconType: 'Shield'
     },
     {
       id: 7,
@@ -89,7 +89,7 @@ const YoloTestPerformance = () => {
       description: 'One-rep maximum bench press',
       backendStandard: 85,
       category: 'Strength',
-      icon: <TrendingUp className="w-5 h-5" />
+      iconType: 'TrendingUp'
     },
     {
       id: 8,
@@ -99,7 +99,7 @@ const YoloTestPerformance = () => {
       description: 'Lower back and hamstring flexibility',
       backendStandard: 30,
       category: 'Flexibility',
-      icon: <Heart className="w-5 h-5" />
+      iconType: 'Heart'
     },
     {
       id: 9,
@@ -109,7 +109,7 @@ const YoloTestPerformance = () => {
       description: 'Core endurance test',
       backendStandard: 120,
       category: 'Core',
-      icon: <Award className="w-5 h-5" />
+      iconType: 'Award'
     },
     {
       id: 10,
@@ -119,7 +119,7 @@ const YoloTestPerformance = () => {
       description: 'Maximum hand grip force',
       backendStandard: 45,
       category: 'Strength',
-      icon: <Star className="w-5 h-5" />
+      iconType: 'Star'
     }
   ]);
 
@@ -140,6 +140,23 @@ const YoloTestPerformance = () => {
     setAthletePerformance(initialPerformance);
     calculateScores(initialPerformance);
   }, []);
+
+  // Icon mapping
+  const getIconComponent = (iconType) => {
+    switch(iconType) {
+      case 'Activity': return <Activity className="w-5 h-5" />;
+      case 'Zap': return <Zap className="w-5 h-5" />;
+      case 'Flag': return <Flag className="w-5 h-5" />;
+      case 'Clock': return <Clock className="w-5 h-5" />;
+      case 'Target': return <Target className="w-5 h-5" />;
+      case 'Shield': return <Shield className="w-5 h-5" />;
+      case 'TrendingUp': return <TrendingUp className="w-5 h-5" />;
+      case 'Heart': return <Heart className="w-5 h-5" />;
+      case 'Award': return <Award className="w-5 h-5" />;
+      case 'Star': return <Star className="w-5 h-5" />;
+      default: return <Activity className="w-5 h-5" />;
+    }
+  };
 
   // Calculate scores when performance changes
   const calculateScores = (performance) => {
@@ -463,7 +480,7 @@ const YoloTestPerformance = () => {
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600">
-                    {currentTaskData.icon}
+                    {getIconComponent(currentTaskData.iconType)}
                   </div>
                   <div>
                     <h3 className="text-xl font-bold text-gray-900">Test {currentTask}: {currentTaskData.name}</h3>
@@ -577,7 +594,7 @@ const YoloTestPerformance = () => {
                       <tr key={task.id} className="border-b border-gray-100 hover:bg-gray-50">
                         <td className="py-4 px-4">
                           <div className="flex items-center gap-2">
-                            {task.icon}
+                            {getIconComponent(task.iconType)}
                             <div>
                               <div className="font-medium text-gray-900">{task.name}</div>
                               <div className="text-xs text-gray-500">{task.category}</div>

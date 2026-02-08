@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { 
-  CheckCircle, XCircle, AlertTriangle, RefreshCw, Target, 
-  Activity, Award, BarChart, Zap, Clock, TrendingUp, 
-  GitBranch, Repeat, Save, Loader2 
+import {
+  CheckCircle, XCircle, AlertTriangle, RefreshCw, Target,
+  Activity, Award, BarChart, Zap, Clock, TrendingUp,
+  GitBranch, Repeat, Save, Loader2
 } from 'lucide-react';
 import axios from 'axios';
 
@@ -32,7 +32,7 @@ const RelayMockTest = () => {
       verbalCueTiming: 15,
       legMuscleTightness: 25
     };
-    
+
     let score = 0;
     Object.keys(techniqueChecks).forEach(key => {
       if (techniqueChecks[key] === 'Correct') {
@@ -81,7 +81,7 @@ const RelayMockTest = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyan-50 to-teal-50 p-6 md:p-12 font-sans">
       <div className="max-w-7xl mx-auto">
-        
+
         <header className="mb-12">
           <span className="inline-block px-4 py-1.5 rounded-full bg-cyan-100 text-cyan-600 text-xs font-black uppercase tracking-widest mb-4">
             Team Sprint Analysis
@@ -99,30 +99,43 @@ const RelayMockTest = () => {
                 {relayChecksList.map((check) => (
                   <div key={check.id} className="p-6 bg-gray-50 rounded-3xl border border-gray-100 transition-all hover:bg-white hover:shadow-md">
                     <div className="flex items-center gap-4 mb-4">
-                       <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm">{check.icon}</div>
-                       <h3 className="font-bold text-gray-800">{check.label}</h3>
+                      <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm">{check.icon}</div>
+                      <h3 className="font-bold text-gray-800">{check.label}</h3>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
-                      <button 
+                      <button
                         onClick={() => handleTechniqueChange(check.id, 'Correct')}
                         className={`py-4 rounded-2xl font-bold border transition-all ${techniqueChecks[check.id] === 'Correct' ? 'bg-emerald-50 border-emerald-300 text-emerald-700 shadow-sm' : 'bg-white border-gray-200 text-gray-400'}`}
                       >Correct</button>
-                      <button 
+                      <button
                         onClick={() => handleTechniqueChange(check.id, 'Incorrect')}
                         className={`py-4 rounded-2xl font-bold border transition-all ${techniqueChecks[check.id] === 'Incorrect' ? 'bg-red-50 border-red-300 text-red-700 shadow-sm' : 'bg-white border-gray-200 text-gray-400'}`}
                       >Incorrect</button>
                     </div>
                   </div>
                 ))}
-
-                <button 
-                  onClick={handleSubmit}
-                  disabled={isSubmitting || Object.values(techniqueChecks).some(v => v === '')}
-                  className="w-full flex items-center justify-center gap-3 px-8 py-5 bg-gradient-to-r from-cyan-600 to-teal-600 text-white font-black rounded-3xl hover:shadow-2xl transition-all transform hover:-translate-y-1 disabled:opacity-50"
-                >
-                  {isSubmitting ? <Loader2 className="animate-spin" /> : <Save size={20} />} 
-                  SAVE TEAM ASSESSMENT
-                </button>
+                <div className='flex items-center justify-between gap-3'>
+                  <button
+                    onClick={handleSubmit}
+                    disabled={isSubmitting || Object.values(techniqueChecks).some(v => v === '')}
+                    className="w-[60vw] flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-cyan-600 to-teal-600 text-white font-black rounded-3xl hover:shadow-2xl transition-all transform hover:-translate-y-1 disabled:opacity-50"
+                  >
+                    {isSubmitting ? <Loader2 className="animate-spin" /> : <Save size={20} />}
+                    SAVE TEAM ASSESSMENT
+                  </button>
+                  <button
+                    onClick={() => setTechniqueChecks({
+                      accelerationDistance: '',
+                      batonExchange: '',
+                      armAngle: '',
+                      verbalCueTiming: '',
+                      legMuscleTightness: ''
+                    })}
+                    className="px-6 py-4 bg-gray-100 text-gray-500 rounded-2xl font-black uppercase tracking-widest hover:bg-gray-200 transition-all"
+                  >
+                    <RefreshCw size={20} />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
