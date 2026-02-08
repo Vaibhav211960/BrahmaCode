@@ -73,16 +73,14 @@ const AthleteDashboard = () => {
               Authorization: token,
             },
           },
-        
-      )
-      .then((res) => {
-        setCoachInvitation(res.data);
-      })
-      .catch((err) => console.log(err));
-    }
-      catch (error) {
-        console.log("Error fetching athlete data:", error);
+        );
+        setCoachInvitation(invRes.data);
+      } catch (error) {
+        console.error("Error fetching invitations:", error);
       }
+    };
+
+    fetchAthleteData();
 
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -371,6 +369,5 @@ const AthleteDashboard = () => {
       </div>
     </div>
   );
-};
-
+}
 export default AthleteDashboard;
