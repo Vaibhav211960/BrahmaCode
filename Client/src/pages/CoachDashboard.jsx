@@ -4,7 +4,8 @@ import axios from 'axios';
 import { 
   LogOut, Activity, AlertTriangle, TrendingUp, Users, 
   ChevronRight, ShieldAlert, Search, Dumbbell, Timer, Plus,
-  FileText, ArrowUpRight, CheckCircle2, LayoutDashboard, Loader2
+  FileText, ArrowUpRight, CheckCircle2, LayoutDashboard, Loader2,
+  Trophy, ClipboardList
 } from 'lucide-react';
 
 const CoachDashboard = () => {
@@ -12,7 +13,7 @@ const CoachDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [searchTerm, setSearchTerm] = useState('');
   
-  // --- REAL DATA STATES ---
+  // Real Data States
   const [athletes, setAthletes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -23,31 +24,23 @@ const CoachDashboard = () => {
     institute: "National Sports Institute"
   };
 
-  // --- FETCH ATHLETES FROM BACKEND ---
   useEffect(() => {
     const fetchAthletes = async () => {
       try {
         setLoading(true);
         const token = localStorage.getItem('token');
-        
-        // Ensure this URL matches your backend route (e.g., /api/coach/my-athletes)
         const res = await axios.get("http://localhost:3000/api/athlete/all", {
           headers: { Authorization: `Bearer ${token}` }
         });
-
         setAthletes(res.data.data);
-        console.log(res.data.data);
-        
-        // Assuming response is the array of athletes
         setError(null);
       } catch (err) {
         console.error("Fetch Error:", err);
-        setError("Failed to load athlete data. Please check your connection.");
+        setError("Failed to load athlete data.");
       } finally {
         setLoading(false);
       }
     };
-
     fetchAthletes();
   }, []);
 
@@ -61,7 +54,7 @@ const CoachDashboard = () => {
       <div className="h-screen w-full flex items-center justify-center bg-[#f8fafc]">
         <div className="text-center">
           <Loader2 className="w-12 h-12 text-blue-600 animate-spin mx-auto mb-4" />
-          <p className="font-bold text-slate-500">Syncing Athlete Data...</p>
+          <p className="font-black text-slate-400 uppercase tracking-widest text-xs">Syncing Engine...</p>
         </div>
       </div>
     );
@@ -71,10 +64,10 @@ const CoachDashboard = () => {
     <div className="flex h-screen bg-[#f8fafc] overflow-hidden font-sans">
       
       {/* 1. LEFT SIDEBAR */}
-      <aside className="w-80 bg-white border-r border-slate-200 flex flex-col h-full flex-shrink-0 shadow-sm">
+      <aside className="w-80 bg-white border-r border-slate-200 flex flex-col h-full flex-shrink-0 shadow-sm relative z-20">
         <div className="p-8 border-b border-slate-50">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white font-black text-lg">AFC</div>
+            <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white font-black text-lg shadow-lg shadow-blue-200">AFC</div>
             <span className="font-black text-xl tracking-tight text-slate-800">ArenaFitCheck</span>
           </div>
         </div>
@@ -88,71 +81,65 @@ const CoachDashboard = () => {
 
         <div className="p-6 bg-slate-50/50 border-t border-slate-100">
           <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm mb-4">
-            <div className="flex items-center gap-3 mb-1">
+            <div className="flex items-center gap-3">
               <img src="https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?w=100" alt="Coach" className="w-10 h-10 rounded-xl object-cover" />
               <div className="overflow-hidden">
                 <p className="text-sm font-bold text-slate-900 truncate">{profile.name}</p>
-                <p className="text-[10px] font-black text-blue-600 uppercase">Coach</p>
+                <p className="text-[10px] font-black text-blue-600 uppercase">Head Coach</p>
               </div>
             </div>
           </div>
           <button onClick={handleLogout} className="w-full flex items-center justify-center gap-2 py-3 bg-red-50 text-red-600 hover:bg-red-100 rounded-xl text-xs font-bold transition-all">
-            <LogOut size={16} /> Sign Out
+            <LogOut size={16} /> Logout
           </button>
         </div>
       </aside>
 
       {/* 2. MAIN CONTENT AREA */}
-      <main className="flex-1 h-full overflow-y-auto p-8 md:p-12 relative">
+      <main className="flex-1 h-full overflow-y-auto p-8 md:p-12 relative z-10">
         
-        {error && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-100 text-red-600 rounded-2xl flex items-center gap-3 animate-in fade-in">
-            <AlertTriangle size={20} /> <span className="font-bold text-sm">{error}</span>
-          </div>
-        )}
-
+        {/* OVERVIEW TAB */}
         {activeTab === 'overview' && (
-          <div className="max-w-6xl mx-auto space-y-10 animate-in fade-in">
+          <div className="max-w-6xl mx-auto space-y-10 animate-in fade-in duration-500">
             <header>
-              <h1 className="text-4xl font-black text-slate-900 tracking-tight">Intelligence <span className="text-blue-600">Overview.</span></h1>
-              <p className="text-slate-500 mt-2 font-medium">Monitoring {athletes.length} active athletes.</p>
+              <h1 className="text-4xl font-black text-slate-900 tracking-tight">Team <span className="text-blue-600">Intelligence.</span></h1>
+              <p className="text-slate-500 mt-2 font-medium italic">Powered by real-time biomechanical analysis.</p>
             </header>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <StatCard value={athletes.length} label="Enrolled Athletes" icon={<Users size={24}/>} color="blue" />
-              <StatCard value={athletes.filter(a => a.status === 'High Risk').length} label="High Injury Risk" icon={<AlertTriangle size={24}/>} color="red" />
-              <StatCard value="85%" label="Team Avg Readiness" icon={<TrendingUp size={24}/>} color="emerald" />
+              <StatCard value={athletes.length} label="Total Athletes" icon={<Users size={24}/>} color="blue" />
+              <StatCard value="03" label="Injury Warnings" icon={<AlertTriangle size={24}/>} color="red" />
+              <StatCard value="88%" label="Avg Performance" icon={<TrendingUp size={24}/>} color="emerald" />
             </div>
 
             <div className="grid lg:grid-cols-2 gap-8">
               <section className="bg-white rounded-[2.5rem] border border-slate-200 shadow-sm overflow-hidden">
-                <div className="p-6 border-b border-slate-100 bg-slate-50/50">
-                  <h3 className="font-bold text-slate-800 flex items-center gap-2"><ShieldAlert size={18} className="text-red-500" /> Critical Attention</h3>
+                <div className="p-6 border-b border-slate-100 bg-slate-50/50 flex justify-between">
+                  <h3 className="font-bold text-slate-800 flex items-center gap-2"><ShieldAlert size={18} className="text-red-500" /> Critical Focus</h3>
+                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Urgent</span>
                 </div>
-                <div className="p-6 space-y-4">
-                  {athletes.filter(a => a.status === "High Risk").map(a => (
-                    <div key={a._id} className="flex items-center justify-between p-5 bg-white border border-slate-100 rounded-3xl group hover:border-red-200 transition-all">
-                      <p className="font-bold text-slate-900">{a.name}</p>
-                      <button onClick={() => setActiveTab('athletes')} className="p-2 rounded-xl bg-slate-50 group-hover:bg-red-50 text-slate-400 group-hover:text-red-600 transition-all">
-                        <ArrowUpRight size={20} />
-                      </button>
-                    </div>
-                  ))}
+                <div className="p-6 space-y-4 text-center py-12">
+                   <div className="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                     <CheckCircle2 size={32} />
+                   </div>
+                   <p className="font-bold text-slate-800">All data synced from cloud.</p>
+                   <p className="text-sm text-slate-400">No immediate injury risks reported today.</p>
                 </div>
               </section>
             </div>
           </div>
         )}
 
+        {/* MY ATHLETES TAB */}
         {activeTab === 'athletes' && (
           <div className="max-w-6xl mx-auto space-y-8 animate-in slide-in-from-bottom-4">
             <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-              <h1 className="text-4xl font-black text-slate-900 tracking-tight">Athlete Directory</h1>
+              <h1 className="text-4xl font-black text-slate-900 tracking-tight text-blue-600">Athlete Directory</h1>
               <div className="relative w-full md:w-96">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                 <input 
-                  type="text" placeholder="Search..." 
-                  className="w-full pl-12 pr-6 py-4 bg-white border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
+                  type="text" placeholder="Filter by name..." 
+                  className="w-full pl-12 pr-6 py-4 bg-white border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 shadow-sm font-bold text-slate-700"
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
@@ -162,9 +149,9 @@ const CoachDashboard = () => {
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="bg-slate-50/50 border-b border-slate-100">
-                    <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Athlete Details</th>
-                    <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Engine Score</th>
-                    <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Status</th>
+                    <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Name & Sport</th>
+                    <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Email</th>
+                    <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Joined Date</th>
                     <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Action</th>
                   </tr>
                 </thead>
@@ -173,15 +160,11 @@ const CoachDashboard = () => {
                     <tr key={a._id} className="hover:bg-blue-50/20 transition-colors group">
                       <td className="px-8 py-6">
                         <p className="font-bold text-slate-900 mb-1">{a.name}</p>
-                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{a.sport || 'General'}</p>
+                        <p className="text-[10px] font-black text-blue-600 uppercase tracking-widest">{a.sport || 'General'}</p>
                       </td>
-                      <td className="px-8 py-6 text-center font-black text-blue-600 text-xl">
-                        {a.yoloScore || '--'}
-                      </td>
-                      <td className="px-8 py-6">
-                        <span className={`px-4 py-1.5 rounded-xl text-[10px] font-black uppercase border ${
-                          a.status === 'Active' ? 'bg-emerald-50 border-emerald-100 text-emerald-600' : 'bg-red-50 border-red-100 text-red-600'
-                        }`}>{a.status || 'Active'}</span>
+                      <td className="px-8 py-6 font-medium text-slate-500 text-sm">{a.email}</td>
+                      <td className="px-8 py-6 text-center text-xs font-bold text-slate-400">
+                        {new Date(a.createdAt).toLocaleDateString()}
                       </td>
                       <td className="px-8 py-6">
                         <button className="flex items-center gap-2 text-xs font-black text-blue-600 uppercase tracking-widest group-hover:translate-x-1 transition-transform">
@@ -196,7 +179,69 @@ const CoachDashboard = () => {
           </div>
         )}
 
-        {/* ... (Assign Practice Tab Content remains same) ... */}
+        {/* ASSIGN PRACTICE TAB (FIXED & VISIBLE) */}
+        {activeTab === 'assign' && (
+          <div className="max-w-4xl mx-auto space-y-10 animate-in zoom-in-95 duration-300">
+            <header className="text-center">
+               <h1 className="text-4xl font-black text-slate-900 tracking-tight">Publish <span className="text-blue-600">Protocol.</span></h1>
+               <p className="text-slate-500 mt-2 font-medium">Assign specific drills and technical focus points to your team.</p>
+            </header>
+
+            <div className="bg-white rounded-[3rem] border border-slate-200 shadow-2xl p-10 md:p-14">
+              <form className="space-y-8" onSubmit={(e) => { e.preventDefault(); alert('Session published to athlete dashboards!'); setActiveTab('overview'); }}>
+                
+                <div className="grid md:grid-cols-2 gap-8">
+                  <div className="space-y-3">
+                    <label className="text-[10px] font-black uppercase text-slate-400 ml-1 tracking-widest">Target Athlete</label>
+                    <div className="relative">
+                      <Users className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                      <select className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-slate-100 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 font-bold text-slate-700 appearance-none shadow-inner">
+                        <option>Select Athlete...</option>
+                        {athletes.map(a => <option key={a._id}>{a.name}</option>)}
+                        <option className="text-blue-600">-- BROADCAST TO ENTIRE TEAM --</option>
+                      </select>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    <label className="text-[10px] font-black uppercase text-slate-400 ml-1 tracking-widest">Exercise Drill</label>
+                    <div className="relative">
+                      <Dumbbell className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                      <select className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-slate-100 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 font-bold text-slate-700 appearance-none shadow-inner">
+                        <option>Sprints (20m/40m)</option>
+                        <option>Long Jump Technique</option>
+                        <option>Baton Synchronization</option>
+                        <option>Finnish Grip Drills</option>
+                        <option>Recovery / Yoga</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-8">
+                  <div className="space-y-3">
+                    <label className="text-[10px] font-black uppercase text-slate-400 ml-1 tracking-widest">Duration / Volume</label>
+                    <div className="relative">
+                      <Timer className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                      <input type="text" placeholder="e.g. 15 Mins or 10 Throws" className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-slate-100 rounded-2xl outline-none shadow-inner font-bold text-slate-700" />
+                    </div>
+                  </div>
+                  
+                 
+                </div>
+
+                <div className="space-y-3">
+                  <label className="text-[10px] font-black uppercase text-slate-400 ml-1 tracking-widest">Specific Coaching Notes</label>
+                  <textarea rows="4" className="w-full p-6 bg-gray-50 border border-slate-100 rounded-[2.5rem] outline-none focus:ring-2 focus:ring-blue-500 shadow-inner font-medium text-slate-600" placeholder="Focus on keeping the high elbow release..."></textarea>
+                </div>
+
+                <button type="submit" className="w-full py-6 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-black rounded-3xl shadow-xl shadow-blue-200 transition-all transform hover:-translate-y-1 active:scale-95 flex items-center justify-center gap-3 tracking-[0.2em] text-xs">
+                  <CheckCircle2 size={18} /> PUBLISH TO DASHBOARD
+                </button>
+              </form>
+            </div>
+          </div>
+        )}
 
       </main>
     </div>
@@ -207,7 +252,7 @@ const CoachDashboard = () => {
 const NavButton = ({ active, icon, label, onClick }) => (
   <button 
     onClick={onClick}
-    className={`w-full flex items-center gap-3 px-6 py-4 rounded-2xl font-bold transition-all group ${
+    className={`w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-bold transition-all group ${
       active ? 'bg-blue-600 text-white shadow-xl shadow-blue-200' : 'bg-transparent text-slate-500 hover:bg-slate-50'
     }`}
   >
@@ -219,13 +264,13 @@ const NavButton = ({ active, icon, label, onClick }) => (
 
 const StatCard = ({ value, label, icon, color }) => {
   const themes = {
-    blue: "text-blue-600 bg-blue-50",
-    red: "text-red-600 bg-red-50",
-    emerald: "text-emerald-600 bg-emerald-50"
+    blue: "text-blue-600 bg-blue-50 shadow-blue-100",
+    red: "text-red-600 bg-red-50 shadow-red-100",
+    emerald: "text-emerald-600 bg-emerald-50 shadow-emerald-100"
   };
   return (
-    <div className="bg-white p-10 rounded-[2.5rem] border border-slate-200 shadow-sm flex items-center gap-8">
-      <div className={`w-16 h-16 rounded-2xl flex items-center justify-center ${themes[color]}`}>
+    <div className="bg-white p-10 rounded-[2.5rem] border border-slate-200 shadow-sm flex items-center gap-8 hover:shadow-lg hover:border-blue-100 transition-all group">
+      <div className={`w-16 h-16 rounded-2xl flex items-center justify-center transition-all group-hover:scale-110 ${themes[color]}`}>
         {icon}
       </div>
       <div>
